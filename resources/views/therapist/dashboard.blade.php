@@ -74,10 +74,14 @@
                 x: { grid: { display: false }, border: { display: false } },
                 y: {
                     beginAtZero: true,
+                    suggestedMax: 500000,
                     grid: { color: '#f1f5f9' },
                     border: { display: false },
                     ticks: {
-                        callback: (val) => val === 0 ? '0' : (val/1000) + 'k',
+                        stepSize: 100000,
+                        mirror: true,
+                        z: 10,
+                        callback: (val) => 'Rp ' + val.toLocaleString('id-ID'),
                         color: '#94a3b8',
                         font: {
                             family: "'Inter', sans-serif",
