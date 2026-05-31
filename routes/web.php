@@ -87,11 +87,47 @@ Route::middleware(['auth', 'therapist'])->prefix('terapis')->name('therapist.')-
 });
 
 // Temporary Database Fix Route
-Route::get('/fix-role-enum', function () {
+Route::get('/fix-database', function () {
+    $output = [];
+    
+    // 1. Fix Users Role Enum
     try {
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'customer', 'therapist') NOT NULL DEFAULT 'customer'");
-        return "Database enum fixed successfully!";
+        $output[] = "✅ Users table role enum fixed successfully!";
     } catch (\Exception $e) {
-        return "Error: " . $e->getMessage();
+        $output[] = "❌ Users table role enum error: " . $e->getMessage();
     }
+
+    // 2. Fix Therapists user_id Column
+    try {
+        $hasColumn = false;
+        try {
+            \Illuminate\Support\Facades\DB::select("SELECT user_id FROM therapists LIMIT 1");
+            $hasColumn = true;
+        } catch (\Exception $ex) {
+            $hasColumn = false;
+        }
+        
+        if (!$hasColumn) {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE therapists ADD COLUMN user_id BIGINT UNSIGNED NULL AFTER id");
+            try {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE therapists ADD CONSTRAINT fk_therapists_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL");
+            } catch (\Exception $ex) {
+                // If constraint fails (e.g. SQLite or minor DB difference), log it but proceed
+                $output[] = "⚠️ Foreign key constraint could not be added (column was added though): " . $ex->getMessage();
+            }
+            $output[] = "✅ Therapists table user_id column added successfully!";
+        } else {
+            $output[] = "ℹ️ Therapists table user_id column already exists.";
+        }
+    } catch (\Exception $e) {
+        $output[] = "❌ Therapists table user_id error: " . $e->getMessage();
+    }
+
+    return implode("<br>", $output);
+});
+
+// Fallback redirect for old route name
+Route::get('/fix-role-enum', function() {
+    return redirect('/fix-database');
 });
