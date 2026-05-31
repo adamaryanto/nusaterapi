@@ -185,6 +185,185 @@
             </div>
 
         </div>
+    <!-- Midtrans Mockup Modal -->
+    <div id="midtrans-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[90vh]">
+            
+            <!-- Midtrans Header -->
+            <div class="px-5 py-4 border-b border-gray-100 bg-slate-50 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-[10px] font-extrabold bg-[#1d4ed8] text-white px-2 py-0.5 rounded">MIDTRANS</span>
+                    <span class="text-xs font-extrabold text-slate-800">Nusa Terapi Center</span>
+                </div>
+                <div class="flex items-center space-x-1.5 text-slate-600 text-xs font-bold">
+                    <span id="midtrans-timer">14:59</span>
+                    <span>⏱️</span>
+                </div>
+            </div>
+
+            <!-- Transaction Info -->
+            <div class="p-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[9px] uppercase font-bold tracking-wider opacity-75">Order ID</p>
+                        <p class="text-sm font-mono font-bold tracking-tight" id="midtrans-order-id">TRX-2605-001</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[9px] uppercase font-bold tracking-wider opacity-75">Total Pembayaran</p>
+                        <p class="text-xl font-extrabold" id="midtrans-total-amount">Rp 170.000</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-5" id="midtrans-body">
+                
+                <!-- STEP 1: Select Payment Method -->
+                <div id="midtrans-step-select" class="space-y-4">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Cara Pembayaran</h4>
+                    
+                    <!-- Bank Transfer Option Group -->
+                    <div class="space-y-2.5">
+                        <button type="button" onclick="selectMidtransMethod('bca')" class="w-full flex items-center justify-between p-3 border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 rounded-xl transition text-left group">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-slate-50 border border-gray-100 rounded flex items-center justify-center text-[10px] font-extrabold text-blue-700 tracking-tight">BCA</div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">BCA Virtual Account</p>
+                                    <p class="text-[10px] text-gray-400">Bayar via m-BCA, KlikBCA, atau ATM BCA</p>
+                                </div>
+                            </div>
+                            <span class="text-gray-300 group-hover:text-blue-500 transition text-sm">▶</span>
+                        </button>
+
+                        <button type="button" onclick="selectMidtransMethod('mandiri')" class="w-full flex items-center justify-between p-3 border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 rounded-xl transition text-left group">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-slate-50 border border-gray-100 rounded flex items-center justify-center text-[9px] font-extrabold text-yellow-600 tracking-tight">MANDIRI</div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">Mandiri Virtual Account</p>
+                                    <p class="text-[10px] text-gray-400">Bayar via Livin' by Mandiri atau ATM Mandiri</p>
+                                </div>
+                            </div>
+                            <span class="text-gray-300 group-hover:text-blue-500 transition text-sm">▶</span>
+                        </button>
+                        
+                        <button type="button" onclick="selectMidtransMethod('bni')" class="w-full flex items-center justify-between p-3 border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 rounded-xl transition text-left group">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-slate-50 border border-gray-100 rounded flex items-center justify-center text-[10px] font-extrabold text-orange-600 tracking-tight">BNI</div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">BNI Virtual Account</p>
+                                    <p class="text-[10px] text-gray-400">Bayar via BNI Mobile Banking atau ATM BNI</p>
+                                </div>
+                            </div>
+                            <span class="text-gray-300 group-hover:text-blue-500 transition text-sm">▶</span>
+                        </button>
+                    </div>
+
+                    <!-- E-Wallet Option Group -->
+                    <div class="space-y-2.5 pt-2">
+                        <button type="button" onclick="selectMidtransMethod('gopay')" class="w-full flex items-center justify-between p-3 border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 rounded-xl transition text-left group">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-slate-50 border border-gray-100 rounded flex items-center justify-center text-[10px] font-extrabold text-cyan-600 tracking-tight">GoPay</div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">GoPay / QRIS</p>
+                                    <p class="text-[10px] text-gray-400">Bayar instan dengan QR Code atau Aplikasi GoPay</p>
+                                </div>
+                            </div>
+                            <span class="text-gray-300 group-hover:text-blue-500 transition text-sm">▶</span>
+                        </button>
+                    </div>
+
+                    <div class="pt-4 flex justify-between space-x-2">
+                        <button type="button" onclick="closeMidtransModal()" class="w-full py-2.5 border border-gray-300 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition text-center">
+                            Batalkan Transaksi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: BCA Virtual Account Details -->
+                <div id="midtrans-step-bca" class="hidden space-y-4">
+                    <button type="button" onclick="backToMethods()" class="text-xs font-bold text-blue-600 hover:underline flex items-center space-x-1">
+                        <span>←</span> <span>Kembali ke Metode Pembayaran</span>
+                    </button>
+                    <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 text-center space-y-3">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wide" id="midtrans-va-title">Nomor BCA Virtual Account</p>
+                        <div class="flex items-center justify-center space-x-2">
+                            <span class="text-lg font-mono font-extrabold text-slate-800 select-all" id="midtrans-va-number">88012081234567890</span>
+                            <button type="button" onclick="copyVANumber()" class="text-[10px] font-bold text-blue-600 border border-blue-200 px-2 py-1 rounded bg-white hover:bg-blue-50">Salin</button>
+                        </div>
+                        <p class="text-[10px] text-slate-400">Gunakan nomor di atas untuk melakukan transfer Virtual Account.</p>
+                    </div>
+
+                    <div class="space-y-2 text-xs text-slate-500 leading-relaxed">
+                        <p class="font-bold text-slate-700">Petunjuk Transfer:</p>
+                        <ol class="list-decimal pl-4 space-y-1">
+                            <li>Buka aplikasi Mobile Banking Anda atau kunjungi ATM terdekat.</li>
+                            <li>Pilih menu <strong>Transfer</strong> > <strong>Virtual Account</strong>.</li>
+                            <li>Masukkan Nomor Virtual Account di atas.</li>
+                            <li>Konfirmasi jumlah pembayaran dan selesaikan transaksi.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="button" onclick="simulatePaymentSuccess()" class="w-full py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition shadow-md shadow-blue-200">
+                            Simulasikan Pembayaran Berhasil
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2b: GoPay Details -->
+                <div id="midtrans-step-gopay" class="hidden space-y-4 text-center">
+                    <button type="button" onclick="backToMethods()" class="text-xs font-bold text-blue-600 hover:underline flex items-center space-x-1 justify-start text-left w-full">
+                        <span>←</span> <span>Kembali ke Metode Pembayaran</span>
+                    </button>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Scan QR Code dengan GoPay / e-Wallet Lain</p>
+                    <div class="mx-auto w-44 h-44 bg-slate-50 border border-gray-200 rounded-xl flex items-center justify-center p-3 relative overflow-hidden">
+                        <!-- Mock QR Code Design using simple HTML divs -->
+                        <div class="w-36 h-36 bg-[#0f172a] rounded flex flex-wrap p-1.5 gap-1.5 justify-center items-center">
+                            <div class="w-10 h-10 bg-white rounded flex items-center justify-center"><div class="w-5 h-5 bg-[#0f172a] rounded-sm"></div></div>
+                            <div class="w-10 h-10 bg-white rounded flex items-center justify-center"><div class="w-5 h-5 bg-[#0f172a] rounded-sm"></div></div>
+                            <div class="w-10 h-10 bg-white rounded flex items-center justify-center"><div class="w-5 h-5 bg-[#0f172a] rounded-sm"></div></div>
+                            <div class="w-10 h-10 bg-white rounded"></div>
+                            <div class="w-10 h-10 bg-white rounded flex items-center justify-center"><div class="w-4 h-4 bg-[#0f172a] rounded-sm"></div></div>
+                            <div class="w-10 h-10 bg-white rounded"></div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 px-4">QR Code di atas hanya simulasi integrasi Midtrans Snap.</p>
+                    
+                    <div class="pt-4">
+                        <button type="button" onclick="simulatePaymentSuccess()" class="w-full py-3.5 bg-cyan-600 text-white rounded-xl text-sm font-bold hover:bg-cyan-700 transition shadow-md shadow-cyan-200">
+                            Simulasikan Bayar via Aplikasi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Loading/Processing -->
+                <div id="midtrans-step-loading" class="hidden py-8 text-center space-y-4">
+                    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800" id="loading-title">Memverifikasi Pembayaran...</p>
+                        <p class="text-xs text-gray-400 mt-1" id="loading-subtitle">Menghubungkan ke bank partner Midtrans...</p>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Success Message -->
+                <div id="midtrans-step-success" class="hidden py-8 text-center space-y-4">
+                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 border-4 border-emerald-500 rounded-full flex items-center justify-center text-3xl mx-auto animate-bounce">
+                        ✓
+                    </div>
+                    <div>
+                        <p class="text-base font-extrabold text-emerald-600">Pembayaran Berhasil!</p>
+                        <p class="text-xs text-gray-400 mt-1">Transaksi Anda terverifikasi di Nusa Terapi Center.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Secure Message -->
+            <div class="px-5 py-3 border-t border-gray-100 bg-slate-50 text-center flex justify-center items-center space-x-1.5 text-gray-400 text-[9px] font-bold">
+                <span>🔒 Secure payment by Midtrans Snap</span>
+            </div>
+
+        </div>
+    </div>
     </form>
 @endsection
 
@@ -207,7 +386,7 @@
         let selectedDate = "2026-05-16";
         let selectedTimeValue = "13:00";
         let selectedLocationType = "home"; // home or clinic
-        let selectedAddress = "{{ auth()->user()->address ?? 'Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123' }}";
+        let selectedAddress = {!! json_encode(auth()->user()->address ?? "Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123") !!};
         let transportFee = 20000;
 
         function onAddressInput() {
@@ -364,5 +543,139 @@
 
         // Run setup
         initializeBookingForm();
+
+        // Midtrans Simulation Variables
+        let timerInterval = null;
+
+        function startPaymentFlow() {
+            // Generate mock Order ID
+            const datePrefix = "2605";
+            const rand = Math.floor(Math.random() * 900) + 100;
+            const mockOrderId = `TRX-${datePrefix}-${rand}`;
+            
+            // Set values in modal
+            const totalPaymentText = document.getElementById('detail-total-payment').innerText;
+            document.getElementById('midtrans-order-id').innerText = mockOrderId;
+            document.getElementById('midtrans-total-amount').innerText = totalPaymentText;
+            
+            // Show modal
+            document.getElementById('midtrans-modal').classList.remove('hidden');
+            
+            // Reset modal steps
+            document.getElementById('midtrans-step-select').classList.remove('hidden');
+            document.getElementById('midtrans-step-bca').classList.add('hidden');
+            document.getElementById('midtrans-step-gopay').classList.add('hidden');
+            document.getElementById('midtrans-step-loading').classList.add('hidden');
+            document.getElementById('midtrans-step-success').classList.add('hidden');
+            
+            // Start timer
+            startMidtransTimer();
+        }
+
+        function closeMidtransModal() {
+            document.getElementById('midtrans-modal').classList.add('hidden');
+            clearInterval(timerInterval);
+        }
+
+        function startMidtransTimer() {
+            clearInterval(timerInterval);
+            let duration = 15 * 60 - 1; // 14 mins 59 secs
+            const timerEl = document.getElementById('midtrans-timer');
+            timerInterval = setInterval(() => {
+                let minutes = Math.floor(duration / 60);
+                let seconds = duration % 60;
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+                timerEl.innerText = `${minutes}:${seconds}`;
+                if (--duration < 0) {
+                    clearInterval(timerInterval);
+                    closeMidtransModal();
+                }
+            }, 1000);
+        }
+
+        function selectMidtransMethod(method) {
+            document.getElementById('midtrans-step-select').classList.add('hidden');
+            
+            if (method === 'bca' || method === 'mandiri' || method === 'bni') {
+                const stepBca = document.getElementById('midtrans-step-bca');
+                stepBca.classList.remove('hidden');
+                
+                const vaTitle = document.getElementById('midtrans-va-title');
+                const vaNum = document.getElementById('midtrans-va-number');
+                
+                if (method === 'bca') {
+                    vaTitle.innerText = "Nomor BCA Virtual Account";
+                    vaNum.innerText = "8801208" + Math.floor(1000000000 + Math.random() * 9000000000);
+                } else if (method === 'mandiri') {
+                    vaTitle.innerText = "Nomor Mandiri Virtual Account";
+                    vaNum.innerText = "8960808" + Math.floor(1000000000 + Math.random() * 9000000000);
+                } else if (method === 'bni') {
+                    vaTitle.innerText = "Nomor BNI Virtual Account";
+                    vaNum.innerText = "8270008" + Math.floor(1000000000 + Math.random() * 9000000000);
+                }
+            } else if (method === 'gopay') {
+                document.getElementById('midtrans-step-gopay').classList.remove('hidden');
+            }
+        }
+
+        function backToMethods() {
+            document.getElementById('midtrans-step-bca').classList.add('hidden');
+            document.getElementById('midtrans-step-gopay').classList.add('hidden');
+            document.getElementById('midtrans-step-select').classList.remove('hidden');
+        }
+
+        function copyVANumber() {
+            const vaNum = document.getElementById('midtrans-va-number').innerText;
+            navigator.clipboard.writeText(vaNum).then(() => {
+                const copyBtn = document.querySelector('#midtrans-step-bca button[onclick*="copyVANumber"]');
+                if (copyBtn) {
+                    const originalText = copyBtn.innerText;
+                    copyBtn.innerText = "Tersalin!";
+                    copyBtn.disabled = true;
+                    setTimeout(() => {
+                        copyBtn.innerText = originalText;
+                        copyBtn.disabled = false;
+                    }, 1500);
+                }
+            });
+        }
+
+        function simulatePaymentSuccess() {
+            document.getElementById('midtrans-step-bca').classList.add('hidden');
+            document.getElementById('midtrans-step-gopay').classList.add('hidden');
+            
+            const stepLoading = document.getElementById('midtrans-step-loading');
+            stepLoading.classList.remove('hidden');
+            
+            const loadTitle = document.getElementById('loading-title');
+            const loadSubtitle = document.getElementById('loading-subtitle');
+            
+            loadTitle.innerText = "Memverifikasi Pembayaran...";
+            loadSubtitle.innerText = "Menghubungkan ke bank partner Midtrans...";
+            
+            setTimeout(() => {
+                loadTitle.innerText = "Memproses Transaksi...";
+                loadSubtitle.innerText = "Menyelesaikan pesanan Anda di Nusa Terapi Center...";
+                
+                setTimeout(() => {
+                    stepLoading.classList.add('hidden');
+                    
+                    const stepSuccess = document.getElementById('midtrans-step-success');
+                    stepSuccess.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        document.querySelector('form').submit();
+                    }, 1500);
+                    
+                }, 1200);
+            }, 1000);
+        }
+
+        // Intercept Form Submit to show Midtrans Modal
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            startPaymentFlow();
+        });
     </script>
 @endsection
