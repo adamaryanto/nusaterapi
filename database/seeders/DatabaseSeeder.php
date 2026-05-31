@@ -37,94 +37,30 @@ class DatabaseSeeder extends Seeder
             'role' => 'customer',
         ]);
 
-        $customerSiti = User::create([
-            'name' => 'Siti Aminah',
-            'email' => 'siti.customer@gmail.com',
-            'password' => Hash::make('12345678'),
-            'phone' => '0812-3456-0002',
-            'address' => "Jl. Melati No. 5, Solo",
-            'role' => 'customer',
-        ]);
-
-        $customerAndi = User::create([
-            'name' => 'Andi Wijaya',
-            'email' => 'andi@gmail.com',
-            'password' => Hash::make('12345678'),
-            'phone' => '0812-3456-0003',
-            'address' => "Jl. Anggrek No. 12, Solo",
-            'role' => 'customer',
-        ]);
-
-        $customerRina = User::create([
-            'name' => 'Rina Marlina',
-            'email' => 'rina@gmail.com',
-            'password' => Hash::make('12345678'),
-            'phone' => '0812-3456-0004',
-            'address' => "Jl. Kenanga No. 8, Solo",
-            'role' => 'customer',
-        ]);
-
         // 2b. Seed Therapist User Accounts
-        $therapistUser1 = User::create([
-            'name' => 'Adam Aryanto',
-            'email' => 'adam@nusaterapi.com',
+        $therapistUser = User::create([
+            'name' => 'Dika',
+            'email' => 'dika@nusaterapi.com',
             'password' => Hash::make('12345678'),
             'phone' => '0813-1111-0001',
             'address' => 'Solo, Jawa Tengah',
             'role' => 'therapist',
         ]);
-        $therapistUser2 = User::create([
-            'name' => 'Siti Aminah',
-            'email' => 'siti@nusaterapi.com',
-            'password' => Hash::make('12345678'),
-            'phone' => '0813-1111-0002',
-            'address' => 'Solo, Jawa Tengah',
-            'role' => 'therapist',
-        ]);
 
         // 3. Seed Default Therapists (linked to user accounts where applicable)
-        $adam = Therapist::create([
-            'user_id'   => $therapistUser1->id,
-            'name'      => 'Adam Aryanto',
-            'specialty' => 'Pijat Tradisional, Refleksi, Bekam',
+        $dika = Therapist::create([
+            'user_id'   => $therapistUser->id,
+            'name'      => 'Dika',
+            'specialty' => 'Pijat Tradisional, Refleksi, Bekam, Lulur & Scrub',
             'rating'    => 4.9,
             'status'    => 'Active',
-        ]);
-
-        $siti = Therapist::create([
-            'user_id'   => $therapistUser2->id,
-            'name'      => 'Siti Aminah',
-            'specialty' => 'Refleksi Kaki, Pijat Relaksasi',
-            'rating'    => 4.8,
-            'status'    => 'Active',
-        ]);
-
-        $rizky = Therapist::create([
-            'name' => 'Rizky Firmansyah',
-            'specialty' => 'Pijat Cedera Olahraga, Bekam',
-            'rating' => 4.7,
-            'status' => 'Active',
-        ]);
-
-        $diana = Therapist::create([
-            'name' => 'Diana Putri',
-            'specialty' => 'Lulur, Pijat Relaksasi',
-            'rating' => 4.8,
-            'status' => 'Active',
-        ]);
-
-        $rani = Therapist::create([
-            'name' => 'Rani Suryani',
-            'specialty' => 'Pijat Tradisional Jawa, Kerokan',
-            'rating' => 4.9,
-            'status' => 'Active',
         ]);
 
         // 4. Seed Default Bookings matching layout
         Booking::create([
             'id' => 'TRX-2605-001',
             'user_id' => $customerBudi->id,
-            'therapist_id' => $adam->id,
+            'therapist_id' => $dika->id,
             'service_name' => 'Pijat Tradisional (90m)',
             'schedule_date' => '2026-05-13',
             'schedule_time' => '14:00',
@@ -139,8 +75,8 @@ class DatabaseSeeder extends Seeder
 
         Booking::create([
             'id' => 'TRX-2605-002',
-            'user_id' => $customerSiti->id,
-            'therapist_id' => $adam->id,
+            'user_id' => $customerBudi->id,
+            'therapist_id' => $dika->id,
             'service_name' => 'Refleksi (60m)',
             'schedule_date' => '2026-05-14',
             'schedule_time' => '10:00',
@@ -155,8 +91,8 @@ class DatabaseSeeder extends Seeder
 
         Booking::create([
             'id' => 'TRX-2605-003',
-            'user_id' => $customerAndi->id,
-            'therapist_id' => $adam->id,
+            'user_id' => $customerBudi->id,
+            'therapist_id' => $dika->id,
             'service_name' => 'Pijat + Bekam',
             'schedule_date' => '2026-05-14',
             'schedule_time' => '15:00',
@@ -171,8 +107,8 @@ class DatabaseSeeder extends Seeder
 
         Booking::create([
             'id' => 'TRX-2605-004',
-            'user_id' => $customerRina->id,
-            'therapist_id' => $adam->id,
+            'user_id' => $customerBudi->id,
+            'therapist_id' => $dika->id,
             'service_name' => 'Lulur Tradisional',
             'schedule_date' => '2026-05-15',
             'schedule_time' => '09:00',
@@ -189,7 +125,7 @@ class DatabaseSeeder extends Seeder
         Booking::create([
             'id' => 'TRX-2605-005',
             'user_id' => $customerBudi->id,
-            'therapist_id' => $adam->id,
+            'therapist_id' => $dika->id,
             'service_name' => 'Terapi Bekam (60m)',
             'schedule_date' => '2026-05-16',
             'schedule_time' => '11:00',
