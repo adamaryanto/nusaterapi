@@ -24,7 +24,7 @@ class TherapistController extends Controller
             ->where('schedule_date', $today)->count();
 
         $bookingPending = Booking::where('therapist_id', $therapist->id)
-            ->where('status', 'Pending')->count();
+            ->where('status', 'Akan Datang')->count();
 
         $bookingSelesai = Booking::where('therapist_id', $therapist->id)
             ->where('status', 'Selesai')->count();

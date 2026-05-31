@@ -596,27 +596,7 @@
 
         function selectMidtransMethod(method) {
             document.getElementById('midtrans-step-select').classList.add('hidden');
-            
-            if (method === 'bca' || method === 'mandiri' || method === 'bni') {
-                const stepBca = document.getElementById('midtrans-step-bca');
-                stepBca.classList.remove('hidden');
-                
-                const vaTitle = document.getElementById('midtrans-va-title');
-                const vaNum = document.getElementById('midtrans-va-number');
-                
-                if (method === 'bca') {
-                    vaTitle.innerText = "Nomor BCA Virtual Account";
-                    vaNum.innerText = "8801208" + Math.floor(1000000000 + Math.random() * 9000000000);
-                } else if (method === 'mandiri') {
-                    vaTitle.innerText = "Nomor Mandiri Virtual Account";
-                    vaNum.innerText = "8960808" + Math.floor(1000000000 + Math.random() * 9000000000);
-                } else if (method === 'bni') {
-                    vaTitle.innerText = "Nomor BNI Virtual Account";
-                    vaNum.innerText = "8270008" + Math.floor(1000000000 + Math.random() * 9000000000);
-                }
-            } else if (method === 'gopay') {
-                document.getElementById('midtrans-step-gopay').classList.remove('hidden');
-            }
+            simulatePaymentSuccess();
         }
 
         function backToMethods() {

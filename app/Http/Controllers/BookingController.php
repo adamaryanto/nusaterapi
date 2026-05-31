@@ -76,7 +76,7 @@ class BookingController extends Controller
             'service_price' => $servicePrice,
             'transport_price' => $transportFee,
             'total_payment' => $totalPayment,
-            'status'        => 'Pending',
+            'status'        => 'Akan Datang',
             'pay_status'    => 'Lunas',
         ]);
 

@@ -52,22 +52,14 @@
                         @endif
                     </td>
                     <td class="px-6 py-4 text-center">
-                        @if($booking->status === 'Pending')
-                        <div class="flex justify-center items-center gap-2">
-                            <form action="{{ route('therapist.accept', $booking->id) }}" method="POST"
-                                  onsubmit="return confirm('Terima booking ini?')">
+                        @if($booking->status === 'Akan Datang')
+                        <div class="flex justify-center items-center">
+                            <form action="{{ route('therapist.complete', $booking->id) }}" method="POST"
+                                  onsubmit="return confirm('Tandai booking ini sebagai Selesai?')">
                                 @csrf
                                 <button type="submit"
-                                        class="bg-[#0f172a] hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition inline-flex items-center gap-1 shadow-sm">
-                                    ✓ Terima
-                                </button>
-                            </form>
-                            <form action="{{ route('therapist.reject', $booking->id) }}" method="POST"
-                                  onsubmit="return confirm('Tolak booking ini?')">
-                                @csrf
-                                <button type="submit"
-                                        class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 text-xs font-semibold px-3.5 py-1.5 rounded-lg transition inline-flex items-center gap-1 shadow-sm">
-                                    ✕ Tolak
+                                        class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition inline-flex items-center gap-1 shadow-sm">
+                                    ✓ Selesaikan
                                 </button>
                             </form>
                         </div>

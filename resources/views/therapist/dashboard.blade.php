@@ -13,9 +13,9 @@
             <p class="text-sm text-blue-500 font-medium mb-2">Booking Hari Ini</p>
             <p class="text-4xl font-bold text-blue-600">{{ $bookingHariIni }}</p>
         </div>
-        {{-- Booking Pending --}}
+        {{-- Booking Mendatang --}}
         <div class="bg-amber-50 border border-amber-100 rounded-xl p-5">
-            <p class="text-sm text-amber-500 font-medium mb-2">Booking Pending</p>
+            <p class="text-sm text-amber-500 font-medium mb-2">Booking Mendatang</p>
             <p class="text-4xl font-bold text-amber-500">{{ $bookingPending }}</p>
         </div>
         {{-- Booking Selesai --}}
