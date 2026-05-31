@@ -70,7 +70,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/web-management/banner', [WebManagementController::class, 'updateBanner'])->name('web_management.banner');
     Route::post('/web-management/about', [WebManagementController::class, 'updateAbout'])->name('web_management.about');
     Route::post('/web-management/services', [WebManagementController::class, 'servicesStore'])->name('web_management.services.store');
-    Route::put('/web-management/services/{id}/update', [WebManagementController::class, 'servicesUpdate'])->name('web_management.services.update');
+    Route::post('/web-management/services/{id}/update', [WebManagementController::class, 'servicesUpdate'])->name('web_management.services.update');
     Route::delete('/web-management/services/{id}', [WebManagementController::class, 'servicesDestroy'])->name('web_management.services.destroy');
 });
 

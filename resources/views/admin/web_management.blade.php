@@ -13,6 +13,17 @@
         </div>
     @endif
 
+    @if($errors->any())
+        <div class="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl px-5 py-3 text-sm font-medium flex flex-col gap-2 shadow-sm">
+            <span class="font-bold flex items-center gap-1.5">⚠️ Terjadi Kesalahan Pengisian Data:</span>
+            <ul class="list-disc pl-5 space-y-0.5 text-xs text-rose-700 font-normal">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     {{-- ===================================== --}}
     {{-- 1. BANNER UTAMA --}}
     {{-- ===================================== --}}
@@ -195,7 +206,7 @@
                         </td>
                         <td class="px-4 py-3 text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal({{ $service->id }}, '{{ addslashes($service->name) }}', '{{ $service->default_duration }}', {{ $service->price_clinic }}, {{ $service->price_home }}, '{{ addslashes($service->description ?? '') }}', '{{ $service->status }}')"
+                                <button onclick="openEditModal({{ $service->id }}, {{ json_encode($service->name) }}, {{ json_encode($service->default_duration) }}, {{ $service->price_clinic }}, {{ $service->price_home }}, {{ json_encode($service->description ?? '') }}, {{ json_encode($service->status) }})"
                                         class="border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-lg text-xs font-medium transition">
                                     ✏️ Edit
                                 </button>
@@ -311,7 +322,6 @@
         </div>
         <form id="edit-service-form" action="" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
             <div class="p-6 space-y-4">
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Layanan <span class="text-rose-500">*</span></label>
