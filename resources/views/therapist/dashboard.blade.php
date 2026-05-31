@@ -47,7 +47,6 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const colors = ['#93c5fd','#6ee7b7','#fde68a','#c4b5fd','#1e293b','#f9a8d4','#86efac'];
     const ctx = document.getElementById('weeklyChart').getContext('2d');
     new Chart(ctx, {
         type: 'bar',
@@ -55,7 +54,8 @@
             labels: {!! json_encode($weeklyLabels) !!},
             datasets: [{
                 data: {!! json_encode($weeklyData) !!},
-                backgroundColor: colors,
+                backgroundColor: '#3b82f6',
+                hoverBackgroundColor: '#1d4ed8',
                 borderRadius: 6,
                 borderSkipped: false,
             }]
@@ -77,7 +77,12 @@
                     grid: { color: '#f1f5f9' },
                     border: { display: false },
                     ticks: {
-                        callback: (val) => 'Rp ' + (val/1000) + 'K'
+                        callback: (val) => val === 0 ? '0' : (val/1000) + 'k',
+                        color: '#94a3b8',
+                        font: {
+                            family: "'Inter', sans-serif",
+                            size: 11
+                        }
                     }
                 }
             }
