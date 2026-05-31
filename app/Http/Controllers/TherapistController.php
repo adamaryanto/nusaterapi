@@ -52,10 +52,12 @@ class TherapistController extends Controller
             ->where('status', 'Selesai')
             ->sum('total_payment');
 
+        $pendapatanMingguIni = array_sum($weeklyData);
+
         return view('therapist.dashboard', compact(
             'therapist', 'bookingHariIni', 'bookingPending',
             'bookingSelesai', 'pendapatanHarian',
-            'weeklyData', 'weeklyLabels', 'pendapatanBulanIni'
+            'weeklyData', 'weeklyLabels', 'pendapatanBulanIni', 'pendapatanMingguIni'
         ));
     }
 

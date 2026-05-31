@@ -34,9 +34,9 @@
 
     {{-- Weekly Chart --}}
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <p class="text-sm text-gray-500 font-medium mb-1">Statistik Pendapatan (Bulan ini)</p>
+        <p class="text-sm text-gray-500 font-medium mb-1">Statistik Pendapatan (Minggu Ini)</p>
         <p class="text-3xl font-bold text-slate-900 mb-6">
-            Rp {{ number_format($pendapatanBulanIni, 0, ',', '.') }}
+            Rp {{ number_format($pendapatanMingguIni, 0, ',', '.') }}
         </p>
         <canvas id="weeklyChart" height="100"></canvas>
     </div>
