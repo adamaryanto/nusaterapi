@@ -206,8 +206,15 @@
                         </td>
                         <td class="px-4 py-3 text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal({{ $service->id }}, {{ json_encode($service->name) }}, {{ json_encode($service->default_duration) }}, {{ $service->price_clinic }}, {{ $service->price_home }}, {{ json_encode($service->description ?? '') }}, {{ json_encode($service->status) }})"
-                                        class="border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+                                <button type="button"
+                                        class="btn-edit-service border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-lg text-xs font-medium transition"
+                                        data-id="{{ $service->id }}"
+                                        data-name="{{ $service->name }}"
+                                        data-duration="{{ $service->default_duration }}"
+                                        data-price-clinic="{{ $service->price_clinic }}"
+                                        data-price-home="{{ $service->price_home }}"
+                                        data-description="{{ $service->description ?? '' }}"
+                                        data-status="{{ $service->status }}">
                                     ✏️ Edit
                                 </button>
                                 <form action="{{ route('admin.web_management.services.destroy', $service->id) }}" method="POST"
@@ -441,6 +448,23 @@
 
         openModal('modal-edit-service');
     }
+
+    // Bind event listeners to edit buttons using data attributes
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.btn-edit-service').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const duration = this.getAttribute('data-duration');
+                const priceClinic = this.getAttribute('data-price-clinic');
+                const priceHome = this.getAttribute('data-price-home');
+                const description = this.getAttribute('data-description');
+                const status = this.getAttribute('data-status');
+
+                openEditModal(id, name, duration, priceClinic, priceHome, description, status);
+            });
+        });
+    });
 
     // Close with Escape key
     document.addEventListener('keydown', function(e) {
