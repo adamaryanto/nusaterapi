@@ -49,12 +49,52 @@
                             @enderror
                         </div>
 
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-1.5">Email *</label>
+                            <input type="email" name="email" required placeholder="Contoh: terapis@nusaterapi.com" value="{{ old('email') }}"
+                                class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm">
+                            @error('email')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-1.5">Password Login *</label>
+                            <input type="password" name="password" required placeholder="Masukkan password minimal 8 karakter"
+                                class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm">
+                            @error('password')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- No. Telepon -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-1.5">No. Telepon / WhatsApp</label>
+                            <input type="text" name="phone" placeholder="Contoh: 081234567890" value="{{ old('phone') }}"
+                                class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm">
+                            @error('phone')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Spesialisasi -->
                         <div>
                             <label class="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-1.5">Spesialisasi *</label>
                             <input type="text" name="specialty" required placeholder="Contoh: Pijat Tradisional, Bekam, Lulur" value="{{ old('specialty') }}"
                                 class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm">
                             @error('specialty')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Alamat -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-1.5">Alamat</label>
+                            <textarea name="address" rows="3" placeholder="Masukkan alamat lengkap terapis"
+                                class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm">{{ old('address') }}</textarea>
+                            @error('address')
                                 <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>

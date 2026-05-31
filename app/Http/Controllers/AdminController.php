@@ -78,6 +78,10 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
             'specialty' => 'required|string|max:255',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -90,29 +94,47 @@ class AdminController extends Controller
             $avatarPath = 'uploads/therapists/' . $filename;
         }
 
-        Therapist::create([
-            'name' => $request->name,
-            'specialty' => $request->specialty,
-            'avatar_path' => $avatarPath,
-            'status' => 'Active',
-            'rating' => 5.0
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $avatarPath) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'avatar_path' => $avatarPath,
+                'role' => 'therapist',
+            ]);
 
-        return redirect()->route('admin.therapists')->with('success', 'Terapis berhasil ditambahkan.');
+            Therapist::create([
+                'user_id' => $user->id,
+                'name' => $request->name,
+                'specialty' => $request->specialty,
+                'avatar_path' => $avatarPath,
+                'status' => 'Active',
+                'rating' => 5.0
+            ]);
+        });
+
+        return redirect()->route('admin.therapists')->with('success', 'Terapis berhasil ditambahkan beserta akun loginnya.');
     }
 
     public function therapistsEdit($id)
     {
-        $therapist = Therapist::findOrFail($id);
+        $therapist = Therapist::with('user')->findOrFail($id);
         return view('admin.therapists_edit', compact('therapist'));
     }
 
     public function therapistsUpdate(Request $request, $id)
     {
         $therapist = Therapist::findOrFail($id);
+        $userId = $therapist->user_id;
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email' . ($userId ? ',' . $userId : ''),
+            'password' => ($userId ? 'nullable' : 'required') . '|string|min:8',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
             'specialty' => 'required|string|max:255',
             'status' => 'required|string|in:Active,Inactive',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -130,12 +152,40 @@ class AdminController extends Controller
             $avatarPath = 'uploads/therapists/' . $filename;
         }
 
-        $therapist->update([
-            'name' => $request->name,
-            'specialty' => $request->specialty,
-            'status' => $request->status,
-            'avatar_path' => $avatarPath,
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $therapist, $avatarPath) {
+            $user = $therapist->user;
+            
+            $userData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'avatar_path' => $avatarPath,
+            ];
+
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->password);
+            }
+
+            if (!$user) {
+                $userData['role'] = 'therapist';
+                if (!$request->filled('password')) {
+                    $userData['password'] = Hash::make('12345678');
+                }
+                $user = User::create($userData);
+                $therapist->user_id = $user->id;
+            } else {
+                $user->update($userData);
+            }
+
+            $therapist->update([
+                'user_id' => $therapist->user_id,
+                'name' => $request->name,
+                'specialty' => $request->specialty,
+                'status' => $request->status,
+                'avatar_path' => $avatarPath,
+            ]);
+        });
 
         return redirect()->route('admin.therapists')->with('success', 'Terapis berhasil diperbarui.');
     }
@@ -143,10 +193,18 @@ class AdminController extends Controller
     public function therapistsDestroy($id)
     {
         $therapist = Therapist::findOrFail($id);
-        if ($therapist->avatar_path && file_exists(public_path($therapist->avatar_path))) {
-            @unlink(public_path($therapist->avatar_path));
-        }
-        $therapist->delete();
+        
+        \Illuminate\Support\Facades\DB::transaction(function () use ($therapist) {
+            if ($therapist->user) {
+                $therapist->user->delete();
+            }
+            
+            if ($therapist->avatar_path && file_exists(public_path($therapist->avatar_path))) {
+                @unlink(public_path($therapist->avatar_path));
+            }
+            
+            $therapist->delete();
+        });
 
         return redirect()->route('admin.therapists')->with('success', 'Terapis berhasil dihapus.');
     }

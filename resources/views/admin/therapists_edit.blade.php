@@ -50,12 +50,52 @@
                             @enderror
                         </div>
 
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Email *</label>
+                            <input type="email" name="email" required placeholder="Contoh: terapis@nusaterapi.com" value="{{ old('email', $therapist->user?->email) }}"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-medium">
+                            @error('email')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Password Baru (Kosongkan jika tidak diubah)</label>
+                            <input type="password" name="password" placeholder="Masukkan password minimal 8 karakter"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-medium">
+                            @error('password')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- No. Telepon -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">No. Telepon / WhatsApp</label>
+                            <input type="text" name="phone" placeholder="Contoh: 081234567890" value="{{ old('phone', $therapist->user?->phone) }}"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-medium">
+                            @error('phone')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Spesialisasi -->
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Spesialisasi *</label>
                             <input type="text" name="specialty" required placeholder="Contoh: Pijat Tradisional, Bekam, Lulur" value="{{ old('specialty', $therapist->specialty) }}"
                                 class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-medium">
                             @error('specialty')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Alamat -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Alamat</label>
+                            <textarea name="address" rows="3" placeholder="Masukkan alamat lengkap terapis"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-medium">{{ old('address', $therapist->user?->address) }}</textarea>
+                            @error('address')
                                 <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
