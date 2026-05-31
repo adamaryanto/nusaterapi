@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\WebManagementController;
+use App\Http\Controllers\TherapistController;
 
 // 1. Public Routes
 Route::get('/', function () {
@@ -71,4 +72,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/web-management/services', [WebManagementController::class, 'servicesStore'])->name('web_management.services.store');
     Route::put('/web-management/services/{id}/update', [WebManagementController::class, 'servicesUpdate'])->name('web_management.services.update');
     Route::delete('/web-management/services/{id}', [WebManagementController::class, 'servicesDestroy'])->name('web_management.services.destroy');
+});
+
+// 6. Therapist-only Routes
+Route::middleware(['auth', 'therapist'])->prefix('terapis')->name('therapist.')->group(function () {
+    Route::get('/dashboard', [TherapistController::class, 'dashboard'])->name('dashboard');
+    Route::get('/bookings', [TherapistController::class, 'bookings'])->name('bookings');
+    Route::get('/jadwal', [TherapistController::class, 'schedule'])->name('schedule');
+    Route::get('/pendapatan', [TherapistController::class, 'income'])->name('income');
+    Route::get('/review', [TherapistController::class, 'reviews'])->name('reviews');
+    Route::post('/bookings/{id}/complete', [TherapistController::class, 'completeBooking'])->name('complete');
 });

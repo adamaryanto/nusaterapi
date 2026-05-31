@@ -12,9 +12,11 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return Auth::user()->role === 'admin' 
-                ? redirect()->route('admin.dashboard') 
-                : redirect()->route('landing');
+            return match(Auth::user()->role) {
+                'admin'     => redirect()->route('admin.dashboard'),
+                'therapist' => redirect()->route('therapist.dashboard'),
+                default     => redirect()->route('landing'),
+            };
         }
         return view('login');
     }
@@ -29,11 +31,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
-            $user = Auth::user();
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-            return redirect()->route('landing');
+            return match(Auth::user()->role) {
+                'admin'     => redirect()->route('admin.dashboard'),
+                'therapist' => redirect()->route('therapist.dashboard'),
+                default     => redirect()->route('landing'),
+            };
         }
 
         return back()->withErrors([
@@ -44,9 +46,11 @@ class AuthController extends Controller
     public function showRegister()
     {
         if (Auth::check()) {
-            return Auth::user()->role === 'admin' 
-                ? redirect()->route('admin.dashboard') 
-                : redirect()->route('landing');
+            return match(Auth::user()->role) {
+                'admin'     => redirect()->route('admin.dashboard'),
+                'therapist' => redirect()->route('therapist.dashboard'),
+                default     => redirect()->route('landing'),
+            };
         }
         return view('register');
     }

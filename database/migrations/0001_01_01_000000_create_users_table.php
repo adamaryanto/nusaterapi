@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('avatar_path')->nullable();
-            $table->enum('role', ['admin', 'customer'])->default('customer');
+            $table->enum('role', ['admin', 'customer', 'therapist'])->default('customer');
             $table->rememberToken();
             $table->timestamps();
         });

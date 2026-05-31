@@ -37,19 +37,39 @@ class DatabaseSeeder extends Seeder
             'role' => 'customer',
         ]);
 
-        // 3. Seed Default Therapists
-        $adam = Therapist::create([
+        // 2b. Seed Therapist User Accounts
+        $therapistUser1 = User::create([
             'name' => 'Adam Aryanto',
+            'email' => 'adam@nusaterapi.com',
+            'password' => Hash::make('12345678'),
+            'phone' => '0813-1111-0001',
+            'address' => 'Solo, Jawa Tengah',
+            'role' => 'therapist',
+        ]);
+        $therapistUser2 = User::create([
+            'name' => 'Siti Aminah',
+            'email' => 'siti@nusaterapi.com',
+            'password' => Hash::make('12345678'),
+            'phone' => '0813-1111-0002',
+            'address' => 'Solo, Jawa Tengah',
+            'role' => 'therapist',
+        ]);
+
+        // 3. Seed Default Therapists (linked to user accounts where applicable)
+        $adam = Therapist::create([
+            'user_id'   => $therapistUser1->id,
+            'name'      => 'Adam Aryanto',
             'specialty' => 'Pijat Tradisional, Refleksi, Bekam',
-            'rating' => 4.9,
-            'status' => 'Active',
+            'rating'    => 4.9,
+            'status'    => 'Active',
         ]);
 
         $siti = Therapist::create([
-            'name' => 'Siti Aminah',
+            'user_id'   => $therapistUser2->id,
+            'name'      => 'Siti Aminah',
             'specialty' => 'Refleksi Kaki, Pijat Relaksasi',
-            'rating' => 4.8,
-            'status' => 'Active',
+            'rating'    => 4.8,
+            'status'    => 'Active',
         ]);
 
         $rizky = Therapist::create([
