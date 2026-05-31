@@ -7,7 +7,7 @@
         // Dynamic Badge Style
         $badgeClass = "";
         if ($booking->status === "Akan Datang") {
-            $badgeClass = "bg-blue-50 text-blue-700 border-blue-200";
+            $badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
         } elseif ($booking->status === "Selesai") {
             $badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
         } elseif ($booking->status === "Menunggu Pembayaran") {
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div>
-                <span class="px-3.5 py-1 text-xs font-bold rounded-full border {{ $badgeClass }}" id="detail-status-badge">{{ $booking->status }}</span>
+                <span class="px-3.5 py-1 text-xs font-bold rounded-full border {{ $badgeClass }}" id="detail-status-badge">{{ $booking->status === 'Akan Datang' ? 'Dikonfirmasi' : $booking->status }}</span>
             </div>
         </div>
 

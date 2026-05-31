@@ -34,7 +34,7 @@
                             </td>
                             <td class="py-4 px-4">
                                 @if($booking->status == 'Akan Datang')
-                                    <span class="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-semibold rounded-full border border-amber-200">Akan Datang</span>
+                                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200">Dikonfirmasi</span>
                                 @elseif($booking->status == 'Selesai')
                                     <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200">Selesai</span>
                                 @elseif($booking->status == 'Dibatalkan')

@@ -136,7 +136,7 @@
                             <div class="flex items-center gap-2">
                                 <span class="text-gray-400 font-medium">Status Booking</span>
                                 @if($booking->status == 'Akan Datang')
-                                    <span class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-full border border-amber-200">Akan Datang</span>
+                                    <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">Dikonfirmasi</span>
                                 @elseif($booking->status == 'Selesai')
                                     <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">Selesai</span>
                                 @elseif($booking->status == 'Dibatalkan')

@@ -12,7 +12,7 @@
         <div class="flex border-b border-gray-100 text-sm font-semibold text-gray-400 overflow-x-auto space-x-8 mb-8 scrollbar-none">
             <button onclick="changeTab('Semua')" id="tab-Semua" class="py-3 border-b-2 border-slate-900 text-slate-900 focus:outline-none whitespace-nowrap transition-all font-bold">Semua</button>
             <button onclick="changeTab('Menunggu Pembayaran')" id="tab-Menunggu_Pembayaran" class="py-3 border-b-2 border-transparent hover:text-slate-800 focus:outline-none whitespace-nowrap transition-all">Menunggu Pembayaran</button>
-            <button onclick="changeTab('Akan Datang')" id="tab-Akan_Datang" class="py-3 border-b-2 border-transparent hover:text-slate-800 focus:outline-none whitespace-nowrap transition-all">Akan Datang</button>
+            <button onclick="changeTab('Akan Datang')" id="tab-Akan_Datang" class="py-3 border-b-2 border-transparent hover:text-slate-800 focus:outline-none whitespace-nowrap transition-all">Dikonfirmasi</button>
             <button onclick="changeTab('Selesai')" id="tab-Selesai" class="py-3 border-b-2 border-transparent hover:text-slate-800 focus:outline-none whitespace-nowrap transition-all">Selesai</button>
             <button onclick="changeTab('Dibatalkan')" id="tab-Dibatalkan" class="py-3 border-b-2 border-transparent hover:text-slate-800 focus:outline-none whitespace-nowrap transition-all">Dibatalkan</button>
         </div>
@@ -24,7 +24,7 @@
                     // Dynamic Badge Style
                     $badgeClass = "";
                     if ($booking->status === "Akan Datang") {
-                        $badgeClass = "bg-blue-50 text-blue-700 border-blue-200";
+                        $badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
                     } elseif ($booking->status === "Selesai") {
                         $badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
                     } elseif ($booking->status === "Menunggu Pembayaran") {
@@ -55,7 +55,7 @@
                     <!-- Top Header Section of Card -->
                     <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-5">
                         <div class="flex items-center space-x-3 text-xs font-semibold">
-                            <span class="px-2.5 py-1 rounded-md border text-[10px] uppercase tracking-wider font-bold {{ $badgeClass }}">{{ $booking->status }}</span>
+                            <span class="px-2.5 py-1 rounded-md border text-[10px] uppercase tracking-wider font-bold {{ $badgeClass }}">{{ $booking->status === 'Akan Datang' ? 'Dikonfirmasi' : $booking->status }}</span>
                             <span class="text-gray-400">{{ $booking->id }}</span>
                         </div>
                         

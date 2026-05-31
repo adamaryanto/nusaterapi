@@ -41,7 +41,7 @@
                         @php
                             $statusClass = "";
                             if ($b->status === "Akan Datang") {
-                                $statusClass = "bg-blue-100 text-blue-700 border-blue-200";
+                                $statusClass = "bg-emerald-100 text-emerald-700 border-emerald-200";
                             } elseif ($b->status === "Selesai") {
                                 $statusClass = "bg-emerald-100 text-emerald-700 border-emerald-200";
                             } elseif ($b->status === "Menunggu Pembayaran") {
@@ -57,7 +57,7 @@
                                     {{ $b->therapist ? $b->therapist->name : 'Tanpa Terapis' }} • {{ $b->location_type === 'home' ? 'Home Service' : 'Klinik' }}
                                 </p>
                             </div>
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full border {{ $statusClass }}">{{ $b->status }}</span>
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full border {{ $statusClass }}">{{ $b->status === 'Akan Datang' ? 'Dikonfirmasi' : $b->status }}</span>
                         </div>
                     @empty
                         <p class="text-xs text-gray-400 text-center py-4">Belum ada booking terbaru.</p>
