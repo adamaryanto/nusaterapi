@@ -82,4 +82,6 @@ Route::middleware(['auth', 'therapist'])->prefix('terapis')->name('therapist.')-
     Route::get('/pendapatan', [TherapistController::class, 'income'])->name('income');
     Route::get('/review', [TherapistController::class, 'reviews'])->name('reviews');
     Route::post('/bookings/{id}/complete', [TherapistController::class, 'completeBooking'])->name('complete');
+    Route::post('/bookings/{id}/accept', [TherapistController::class, 'acceptBooking'])->name('accept');
+    Route::post('/bookings/{id}/reject', [TherapistController::class, 'rejectBooking'])->name('reject');
 });

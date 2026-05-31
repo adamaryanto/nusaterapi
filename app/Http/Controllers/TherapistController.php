@@ -24,7 +24,7 @@ class TherapistController extends Controller
             ->where('schedule_date', $today)->count();
 
         $bookingPending = Booking::where('therapist_id', $therapist->id)
-            ->where('status', 'Akan Datang')->count();
+            ->where('status', 'Pending')->count();
 
         $bookingSelesai = Booking::where('therapist_id', $therapist->id)
             ->where('status', 'Selesai')->count();
@@ -140,5 +140,27 @@ class TherapistController extends Controller
 
         $booking->update(['status' => 'Selesai']);
         return redirect()->route('therapist.bookings')->with('success', 'Booking ditandai selesai.');
+    }
+
+    public function acceptBooking($id)
+    {
+        $therapist = $this->getTherapist();
+        $booking = Booking::where('id', $id)
+            ->where('therapist_id', $therapist->id)
+            ->firstOrFail();
+
+        $booking->update(['status' => 'Akan Datang']);
+        return redirect()->route('therapist.bookings')->with('success', 'Booking berhasil diterima.');
+    }
+
+    public function rejectBooking($id)
+    {
+        $therapist = $this->getTherapist();
+        $booking = Booking::where('id', $id)
+            ->where('therapist_id', $therapist->id)
+            ->firstOrFail();
+
+        $booking->update(['status' => 'Dibatalkan']);
+        return redirect()->route('therapist.bookings')->with('success', 'Booking berhasil ditolak.');
     }
 }

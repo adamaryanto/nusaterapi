@@ -28,12 +28,39 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. Seed Customer User
-        $customer = User::create([
+        $customerBudi = User::create([
             'name' => 'Budi Santoso',
             'email' => 'budi@gmail.com',
             'password' => Hash::make('12345678'),
             'phone' => '0812-3456-7890',
             'address' => "Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123",
+            'role' => 'customer',
+        ]);
+
+        $customerSiti = User::create([
+            'name' => 'Siti Aminah',
+            'email' => 'siti.customer@gmail.com',
+            'password' => Hash::make('12345678'),
+            'phone' => '0812-3456-0002',
+            'address' => "Jl. Melati No. 5, Solo",
+            'role' => 'customer',
+        ]);
+
+        $customerAndi = User::create([
+            'name' => 'Andi Wijaya',
+            'email' => 'andi@gmail.com',
+            'password' => Hash::make('12345678'),
+            'phone' => '0812-3456-0003',
+            'address' => "Jl. Anggrek No. 12, Solo",
+            'role' => 'customer',
+        ]);
+
+        $customerRina = User::create([
+            'name' => 'Rina Marlina',
+            'email' => 'rina@gmail.com',
+            'password' => Hash::make('12345678'),
+            'phone' => '0812-3456-0004',
+            'address' => "Jl. Kenanga No. 8, Solo",
             'role' => 'customer',
         ]);
 
@@ -93,52 +120,85 @@ class DatabaseSeeder extends Seeder
             'status' => 'Active',
         ]);
 
-        // 4. Seed Default Bookings for Budi Santoso (Customer)
+        // 4. Seed Default Bookings matching layout
         Booking::create([
             'id' => 'TRX-2605-001',
-            'user_id' => $customer->id,
+            'user_id' => $customerBudi->id,
             'therapist_id' => $adam->id,
-            'service_name' => 'Pijat Tradisional (90 Menit)',
-            'schedule_date' => '2026-05-16',
-            'schedule_time' => '13:00',
+            'service_name' => 'Pijat Tradisional (90m)',
+            'schedule_date' => '2026-05-13',
+            'schedule_time' => '14:00',
             'location_type' => 'home',
-            'address' => "Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123",
-            'service_price' => 150000,
+            'address' => "Jl. Mawar No. 2",
+            'service_price' => 170000,
             'transport_price' => 20000,
-            'total_payment' => 170000,
-            'status' => 'Akan Datang',
+            'total_payment' => 190000,
+            'status' => 'Pending',
             'pay_status' => 'Lunas',
         ]);
 
         Booking::create([
             'id' => 'TRX-2605-002',
-            'user_id' => $customer->id,
-            'therapist_id' => $siti->id,
-            'service_name' => 'Refleksi Kaki (60 Menit)',
-            'schedule_date' => '2026-05-12',
-            'schedule_time' => '19:00',
+            'user_id' => $customerSiti->id,
+            'therapist_id' => $adam->id,
+            'service_name' => 'Refleksi (60m)',
+            'schedule_date' => '2026-05-14',
+            'schedule_time' => '10:00',
             'location_type' => 'home',
-            'address' => "Jl. Adi Sucipto No. 8, Solo\nKota Solo, Jawa Tengah, 57139",
-            'service_price' => 130000,
+            'address' => "Jl. Melati No. 5",
+            'service_price' => 120000,
             'transport_price' => 20000,
-            'total_payment' => 150000,
-            'status' => 'Selesai',
+            'total_payment' => 140000,
+            'status' => 'Akan Datang', // Diterima
             'pay_status' => 'Lunas',
         ]);
 
         Booking::create([
             'id' => 'TRX-2605-003',
-            'user_id' => $customer->id,
-            'therapist_id' => $rizky->id,
-            'service_name' => 'Terapi Bekam (60 Menit)',
-            'schedule_date' => '2026-05-01',
+            'user_id' => $customerAndi->id,
+            'therapist_id' => $adam->id,
+            'service_name' => 'Pijat + Bekam',
+            'schedule_date' => '2026-05-14',
             'schedule_time' => '15:00',
             'location_type' => 'home',
-            'address' => "Jl. Slamet Riyadi No. 45, Solo\nKota Solo, Jawa Tengah, 57123",
-            'service_price' => 100000,
+            'address' => "Jl. Anggrek No. 12",
+            'service_price' => 140000,
             'transport_price' => 20000,
+            'total_payment' => 160000,
+            'status' => 'Dibatalkan', // Ditolak
+            'pay_status' => 'Batal',
+        ]);
+
+        Booking::create([
+            'id' => 'TRX-2605-004',
+            'user_id' => $customerRina->id,
+            'therapist_id' => $adam->id,
+            'service_name' => 'Lulur Tradisional',
+            'schedule_date' => '2026-05-15',
+            'schedule_time' => '09:00',
+            'location_type' => 'home',
+            'address' => "Jl. Kenanga No. 8",
+            'service_price' => 230000,
+            'transport_price' => 20000,
+            'total_payment' => 250000,
+            'status' => 'Pending',
+            'pay_status' => 'Lunas',
+        ]);
+
+        // Additional clinic booking to verify clinic view
+        Booking::create([
+            'id' => 'TRX-2605-005',
+            'user_id' => $customerBudi->id,
+            'therapist_id' => $adam->id,
+            'service_name' => 'Terapi Bekam (60m)',
+            'schedule_date' => '2026-05-16',
+            'schedule_time' => '11:00',
+            'location_type' => 'clinic',
+            'address' => 'Klinik Utama Nusa Terapi, Solo',
+            'service_price' => 120000,
+            'transport_price' => 0,
             'total_payment' => 120000,
-            'status' => 'Selesai',
+            'status' => 'Pending',
             'pay_status' => 'Lunas',
         ]);
 

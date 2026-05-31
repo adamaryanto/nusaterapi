@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('service_price');
             $table->integer('transport_price')->default(0);
             $table->integer('total_payment');
-            $table->enum('status', ['Akan Datang', 'Selesai', 'Dibatalkan', 'Menunggu Pembayaran'])->default('Akan Datang');
+            $table->enum('status', ['Pending', 'Akan Datang', 'Selesai', 'Dibatalkan', 'Menunggu Pembayaran'])->default('Pending');
             $table->enum('pay_status', ['Lunas', 'Belum Bayar', 'Batal'])->default('Lunas');
             $table->timestamps();
         });

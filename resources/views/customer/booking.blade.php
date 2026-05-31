@@ -114,6 +114,14 @@
                             </div>
                         </div>
 
+                        <!-- Input Alamat Rumah (Hanya untuk Home Service) -->
+                        <div id="address-input-group" class="space-y-1.5 pt-2">
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide">Alamat Lengkap Rumah</label>
+                            <textarea id="input-address" rows="3" oninput="onAddressInput()"
+                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-semibold"
+                                placeholder="Masukkan alamat lengkap rumah Anda...">{{ auth()->user()->address ?? '' }}</textarea>
+                        </div>
+
                     </div>
 
                 </div>
@@ -197,7 +205,13 @@
         let selectedDate = "2026-05-16";
         let selectedTimeValue = "13:00";
         let selectedLocationType = "home"; // home or clinic
+        let selectedAddress = "{{ auth()->user()->address ?? 'Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123' }}";
         let transportFee = 20000;
+
+        function onAddressInput() {
+            selectedAddress = document.getElementById('input-address').value;
+            updateBookingSummary();
+        }
 
         function formatPrice(number) {
             return "Rp " + number.toLocaleString('id-ID');
@@ -256,16 +270,17 @@
             document.getElementById('detail-schedule-date').innerText = `${formattedDate} • ${selectedTimeValue} WIB`;
 
             // 3. Location & Address
-            const userAddress = "{{ auth()->user()->address ?? 'Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123' }}";
-            const finalAddress = selectedLocationType === 'home' ? userAddress : "Klinik Utama Nusa Terapi, Solo";
+            const finalAddress = selectedLocationType === 'home' ? selectedAddress : "Klinik Utama Nusa Terapi, Solo";
             
             if (selectedLocationType === 'home') {
                 document.getElementById('detail-location-type').innerText = "Home Service";
-                document.getElementById('detail-location-address').innerText = userAddress;
+                document.getElementById('detail-location-address').innerText = selectedAddress;
+                document.getElementById('address-input-group').classList.remove('hidden');
                 transportFee = 20000;
             } else {
                 document.getElementById('detail-location-type').innerText = "Datang ke Klinik";
                 document.getElementById('detail-location-address').innerText = "Klinik Utama Nusa Terapi, Solo";
+                document.getElementById('address-input-group').classList.add('hidden');
                 transportFee = 0;
             }
             document.getElementById('hidden-address').value = finalAddress;
