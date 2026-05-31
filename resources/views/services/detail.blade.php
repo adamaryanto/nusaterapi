@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    $services = \App\Models\Service::active()->get();
+@endphp
+
 @section('title', 'Detail Layanan - Nusa Terapi Center')
 
 @section('content')
@@ -100,82 +104,44 @@
     <script>
         // Database of services matching mockup requirements
         const servicesDb = {
-            "pijat-tradisional": {
-                title: "Pijat Tradisional (Full Body)",
-                breadcrumb: "Pijat Tradisional",
-                image: "{{ asset('traditional_massage.png') }}",
-                description: "Pijat tradisional Nusantara yang fokus pada penekanan saraf dan otot kaku. Menggunakan minyak zaitun hangat dan teknik urut untuk melancarkan darah dan meredakan kelelahan.",
-                manfaat: [
-                    "1. Menghilangkan pegal linu dan nyeri otot",
-                    "2. Membantu relaksasi pikiran",
-                    "3. Melancarkan sirkulasi oksigen",
-                    "4. Meningkatkan kualitas tidur"
-                ],
-                terapis: ["Buna Tedy", "Siti Aminah", "Rizky Firmansyah", "Diana Putri"],
+            @foreach($services as $service)
+            @php
+                // Benefits fallback mapping
+                $manfaat = ["1. Menghilangkan pegal linu dan nyeri otot", "2. Membantu relaksasi pikiran", "3. Melancarkan sirkulasi oksigen", "4. Meningkatkan kualitas tidur"];
+                if (str_contains(strtolower($service->name), 'refleksi')) {
+                    $manfaat = ["1. Meredakan pegal kaki dan pegal tubuh", "2. Melancarkan peredaran darah", "3. Mengurangi ketegangan saraf", "4. Menyeimbangkan sistem energi tubuh"];
+                } elseif (str_contains(strtolower($service->name), 'bekam')) {
+                    $manfaat = ["1. Membuang racun dan darah kotor", "2. Meringankan migrain dan pegal pundak", "3. Meningkatkan imunitas tubuh", "4. Melancarkan regenerasi sel darah baru"];
+                } elseif (str_contains(strtolower($service->name), 'lulur') || str_contains(strtolower($service->name), 'scrub')) {
+                    $manfaat = ["1. Mengangkat sel kulit mati", "2. Mencerahkan dan menghaluskan kulit", "3. Memberikan efek relaksasi yang menyegarkan", "4. Menutrisi kulit tubuh secara mendalam"];
+                }
+                
+                // Image path fallback
+                $img = $service->image_path ? asset($service->image_path) : '';
+                if (!$img) {
+                    if (str_contains(strtolower($service->name), 'refleksi')) $img = "🦶";
+                    elseif (str_contains(strtolower($service->name), 'bekam')) $img = "🍯";
+                    elseif (str_contains(strtolower($service->name), 'lulur') || str_contains(strtolower($service->name), 'scrub')) $img = "🌸";
+                }
+            @endphp
+            "{{ $service->slug }}": {
+                title: "{{ $service->name }}",
+                breadcrumb: "{{ $service->name }}",
+                image: "{{ $img }}",
+                description: "{{ addslashes($service->description ?? '') }}",
+                manfaat: {!! json_encode($manfaat) !!},
+                terapis: ["Siti Aminah", "Adam Aryanto", "Rizky Firmansyah", "Diana Putri"],
                 prices: {
-                    "60m": 100000,
-                    "90m": 150000,
-                    "120m": 200000
+                    "60m": {{ $service->price_clinic }},
+                    "90m": {{ $service->price_home }},
+                    "120m": {{ (int)($service->price_home * 1.3) }}
                 }
             },
-            "refleksi-kaki": {
-                title: "Refleksi Kaki",
-                breadcrumb: "Refleksi Kaki",
-                image: "🦶",
-                description: "Terapi pijat refleksi kaki untuk menstimulasi titik saraf organ tubuh, mengurangi stres, melancarkan aliran darah, dan meredakan pegal pada kaki.",
-                manfaat: [
-                    "1. Meredakan pegal kaki dan pegal tubuh",
-                    "2. Melancarkan peredaran darah",
-                    "3. Mengurangi ketegangan saraf",
-                    "4. Menyeimbangkan sistem energi tubuh"
-                ],
-                terapis: ["Siti Aminah", "Diana Putri", "Rani Suryani"],
-                prices: {
-                    "60m": 80000,
-                    "90m": 120000,
-                    "120m": 160000
-                }
-            },
-            "terapi-bekam": {
-                title: "Terapi Bekam",
-                breadcrumb: "Terapi Bekam",
-                image: "🍯",
-                description: "Terapi bekam kering/basah menggunakan cangkir hisap untuk mengeluarkan racun tubuh (darah kotor), meringankan masuk angin, dan meningkatkan imunitas.",
-                manfaat: [
-                    "1. Membuang racun dan darah kotor",
-                    "2. Meringankan migrain dan pegal pundak",
-                    "3. Meningkatkan imunitas tubuh",
-                    "4. Melancarkan regenerasi sel darah baru"
-                ],
-                terapis: ["Rizky Firmansyah", "Adam Aryanto", "Siti Aminah"],
-                prices: {
-                    "60m": 120000,
-                    "90m": 160000,
-                    "120m": 220000
-                }
-            },
-            "lulur-scrub": {
-                title: "Lulur & Scrub",
-                breadcrumb: "Lulur & Scrub",
-                image: "🌸",
-                description: "Perawatan tubuh lulur tradisional menggunakan scrub alami beraroma wangi untuk mengangkat sel kulit mati, melembutkan kulit, dan membuat tubuh wangi menyegarkan.",
-                manfaat: [
-                    "1. Mengangkat sel kulit mati",
-                    "2. Mencerahkan dan menghaluskan kulit",
-                    "3. Memberikan efek relaksasi yang menyegarkan",
-                    "4. Menutrisi kulit tubuh secara mendalam"
-                ],
-                terapis: ["Diana Putri", "Rani Suryani", "Siti Aminah"],
-                prices: {
-                    "60m": 130000,
-                    "90m": 180000,
-                    "120m": 240000
-                }
-            }
+            @endforeach
         };
 
         // Active state selectors
-        let currentType = "pijat-tradisional";
+        let currentType = "{{ $services->first() ? $services->first()->slug : 'pijat-tradisional' }}";
         let currentDuration = "90m";
         let service = null;
 

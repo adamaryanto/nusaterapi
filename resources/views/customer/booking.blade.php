@@ -37,10 +37,9 @@
                             <div class="relative">
                                 <select id="select-service" name="service_key" onchange="onServiceChange()"
                                     class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-semibold appearance-none">
-                                    <option value="pijat-tradisional">Pijat Tradisional</option>
-                                    <option value="refleksi-kaki">Refleksi Kaki</option>
-                                    <option value="terapi-bekam">Terapi Bekam</option>
-                                    <option value="lulur-scrub">Lulur & Scrub</option>
+                                    @foreach($services as $service)
+                                        <option value="{{ $service->slug }}">{{ $service->name }}</option>
+                                    @endforeach
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                                     <span>▼</span>
@@ -193,14 +192,17 @@
     <script>
         // Prices mapping for services
         const servicesPriceList = {
-            "pijat-tradisional": { name: "Pijat Tradisional (90 Menit)", price: 150000 },
-            "refleksi-kaki": { name: "Refleksi Kaki (60 Menit)", price: 120000 },
-            "terapi-bekam": { name: "Terapi Bekam (60 Menit)", price: 120000 },
-            "lulur-scrub": { name: "Lulur & Scrub (90 Menit)", price: 180000 }
+            @foreach($services as $service)
+            "{{ $service->slug }}": {
+                name: "{{ $service->name }} ({{ $service->default_duration }})",
+                price_clinic: {{ $service->price_clinic }},
+                price_home: {{ $service->price_home }}
+            },
+            @endforeach
         };
 
         // Active State variables
-        let selectedServiceKey = "pijat-tradisional";
+        let selectedServiceKey = "{{ $services->first() ? $services->first()->slug : 'pijat-tradisional' }}";
         let selectedTherapistName = "{{ $therapists->first() ? $therapists->first()->name : 'Adam Aryanto' }}";
         let selectedDate = "2026-05-16";
         let selectedTimeValue = "13:00";
@@ -238,7 +240,7 @@
         function initializeBookingForm() {
             // Check query strings
             const urlParams = new URLSearchParams(window.location.search);
-            selectedServiceKey = urlParams.get('type') || "pijat-tradisional";
+            selectedServiceKey = urlParams.get('type') || "{{ $services->first() ? $services->first()->slug : 'pijat-tradisional' }}";
             
             // Set service dropdown
             const serviceSelect = document.getElementById('select-service');
@@ -272,24 +274,27 @@
             // 3. Location & Address
             const finalAddress = selectedLocationType === 'home' ? selectedAddress : "Klinik Utama Nusa Terapi, Solo";
             
+            let servicePrice = 0;
             if (selectedLocationType === 'home') {
                 document.getElementById('detail-location-type').innerText = "Home Service";
                 document.getElementById('detail-location-address').innerText = selectedAddress;
                 document.getElementById('address-input-group').classList.remove('hidden');
                 transportFee = 20000;
+                servicePrice = serviceData.price_home;
             } else {
                 document.getElementById('detail-location-type').innerText = "Datang ke Klinik";
                 document.getElementById('detail-location-address').innerText = "Klinik Utama Nusa Terapi, Solo";
                 document.getElementById('address-input-group').classList.add('hidden');
                 transportFee = 0;
+                servicePrice = serviceData.price_clinic;
             }
             document.getElementById('hidden-address').value = finalAddress;
 
             // 4. Prices Calculations
-            document.getElementById('detail-service-price').innerText = formatPrice(serviceData.price);
+            document.getElementById('detail-service-price').innerText = formatPrice(servicePrice);
             document.getElementById('detail-transport-price').innerText = formatPrice(transportFee);
             
-            const totalPayment = serviceData.price + transportFee;
+            const totalPayment = servicePrice + transportFee;
             document.getElementById('detail-total-payment').innerText = formatPrice(totalPayment);
         }
 

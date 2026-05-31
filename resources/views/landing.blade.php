@@ -69,44 +69,34 @@
     <section id="layanan" class="py-20 px-8 md:px-16 bg-white">
         <h2 class="text-3xl font-bold text-center text-slate-900 mb-12">Layanan Unggulan Kami</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
-            <div class="border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-                <div class="h-48 bg-gray-200">
-                    <img src="{{ asset('traditional_massage.png') }}" alt="Pijat Tradisional" class="w-full h-full object-cover">
+            @foreach($services as $service)
+            @php
+                // Fallback icons
+                $icon = "💆";
+                if (str_contains(strtolower($service->name), 'refleksi')) $icon = "🦶";
+                elseif (str_contains(strtolower($service->name), 'bekam')) $icon = "🍯";
+                elseif (str_contains(strtolower($service->name), 'lulur') || str_contains(strtolower($service->name), 'scrub')) $icon = "🌸";
+            @endphp
+            <div class="border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                <div class="h-48 bg-slate-100 border-b border-gray-100 overflow-hidden relative">
+                    @if($service->image_path)
+                        <img src="{{ asset($service->image_path) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center text-gray-400 text-4xl bg-slate-100">
+                            {{ $icon }}
+                        </div>
+                    @endif
                 </div>
-                <div class="p-5 text-center">
-                    <h3 class="font-bold text-base mb-1">Pijat Tradisional</h3>
-                    <p class="text-xs text-gray-400">Mulai dari</p>
-                    <p class="text-sm font-bold text-slate-900 mb-4">Rp 100.000</p>
-                    <a href="{{ route('services.detail') }}?type=pijat-tradisional" class="block w-full py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200 transition">Detail</a>
-                </div>
-            </div>
-            <div class="border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-                <div class="h-48 bg-slate-200 flex items-center justify-center text-3xl">🦶</div>
-                <div class="p-5 text-center">
-                    <h3 class="font-bold text-base mb-1">Refleksi Kaki</h3>
-                    <p class="text-xs text-gray-400">Mulai dari</p>
-                    <p class="text-sm font-bold text-slate-900 mb-4">Rp 80.000</p>
-                    <a href="{{ route('services.detail') }}?type=refleksi-kaki" class="block w-full py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200 transition">Detail</a>
-                </div>
-            </div>
-            <div class="border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-                <div class="h-48 bg-slate-200 flex items-center justify-center text-3xl">🍯</div>
-                <div class="p-5 text-center">
-                    <h3 class="font-bold text-base mb-1">Terapi Bekam</h3>
-                    <p class="text-xs text-gray-400">Mulai dari</p>
-                    <p class="text-sm font-bold text-slate-900 mb-4">Rp 120.000</p>
-                    <a href="{{ route('services.detail') }}?type=terapi-bekam" class="block w-full py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200 transition">Detail</a>
+                <div class="p-5 text-center flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base mb-1 text-slate-800">{{ $service->name }}</h3>
+                        <p class="text-xs text-gray-400 mb-0.5">Mulai dari</p>
+                        <p class="text-sm font-bold text-slate-900 mb-4">Rp {{ number_format(min($service->price_clinic, $service->price_home), 0, ',', '.') }}</p>
+                    </div>
+                    <a href="{{ route('services.detail') }}?type={{ $service->slug }}" class="block w-full py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200 transition">Detail</a>
                 </div>
             </div>
-            <div class="border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-                <div class="h-48 bg-slate-200 flex items-center justify-center text-3xl">🌸</div>
-                <div class="p-5 text-center">
-                    <h3 class="font-bold text-base mb-1">Lulur & Scrub</h3>
-                    <p class="text-xs text-gray-400">Mulai dari</p>
-                    <p class="text-sm font-bold text-slate-900 mb-4">Rp 130.000</p>
-                    <a href="{{ route('services.detail') }}?type=lulur-scrub" class="block w-full py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200 transition">Detail</a>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
 
