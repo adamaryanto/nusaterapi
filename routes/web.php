@@ -85,3 +85,13 @@ Route::middleware(['auth', 'therapist'])->prefix('terapis')->name('therapist.')-
     Route::post('/bookings/{id}/accept', [TherapistController::class, 'acceptBooking'])->name('accept');
     Route::post('/bookings/{id}/reject', [TherapistController::class, 'rejectBooking'])->name('reject');
 });
+
+// Temporary Database Fix Route
+Route::get('/fix-role-enum', function () {
+    try {
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'customer', 'therapist') NOT NULL DEFAULT 'customer'");
+        return "Database enum fixed successfully!";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
