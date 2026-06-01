@@ -155,3 +155,10 @@ Route::get('/fix-database', function () {
 Route::get('/fix-role-enum', function() {
     return redirect('/fix-database');
 });
+
+// Temporary route to delete dummy booking data (to be removed later)
+Route::get('/delete-dummy-data', function () {
+    $ids = ['TRX-2605-001', 'TRX-2605-002', 'TRX-2605-003', 'TRX-2605-004', 'TRX-2605-005'];
+    $deleted = \App\Models\Booking::whereIn('id', $ids)->delete();
+    return "Berhasil menghapus " . $deleted . " data booking dummy dari database.";
+});
