@@ -50,6 +50,15 @@
             </div>
 
             <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Alamat (Opsional)</label>
+                <textarea name="address" rows="2" placeholder="Contoh: Jl. Slamet Riyadi No. 12, Solo"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm text-slate-700">{{ old('address') }}</textarea>
+                @error('address')
+                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
                 <input type="password" name="password" placeholder="••••••••" required minlength="8"
                     class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm text-slate-700">
