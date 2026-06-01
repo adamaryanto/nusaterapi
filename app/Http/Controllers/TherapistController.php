@@ -138,7 +138,44 @@ class TherapistController extends Controller
     public function reviews()
     {
         $therapist = $this->getTherapist();
-        return view('therapist.reviews', compact('therapist'));
+
+        $averageRating = 4.8;
+        $totalReviews = 142;
+
+        $reviews = [
+            [
+                'customer_name' => 'Siti Aminah',
+                'rating' => 5,
+                'comment' => 'Pijatannya sangat enak, badan jadi segar dan ringan kembali. Mantap!',
+                'date' => '14 Mei 2026',
+            ],
+            [
+                'customer_name' => 'Budi Santoso',
+                'rating' => 5,
+                'comment' => 'Pelayanan sangat baik dan terapis datang tepat waktu ke lokasi.',
+                'date' => '12 Mei 2026',
+            ],
+            [
+                'customer_name' => 'Rina Marlina',
+                'rating' => 5,
+                'comment' => 'Sangat ramah dan profesional. Sangat direkomendasikan untuk home service.',
+                'date' => '10 Mei 2026',
+            ],
+            [
+                'customer_name' => 'Ahmad Faisal',
+                'rating' => 4,
+                'comment' => 'Pijatannya lumayan, tapi mungkin karena macet jadi agak telat 10 menit.',
+                'date' => '08 Mei 2026',
+            ],
+            [
+                'customer_name' => 'Diana Putri',
+                'rating' => 5,
+                'comment' => 'Lulurnya wangi dan bikin rileks banget. Besok pasti langganan lagi.',
+                'date' => '05 Mei 2026',
+            ],
+        ];
+
+        return view('therapist.reviews', compact('therapist', 'reviews', 'averageRating', 'totalReviews'));
     }
 
     public function startJourney($id)
