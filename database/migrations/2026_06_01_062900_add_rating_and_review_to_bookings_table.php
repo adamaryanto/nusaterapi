@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->integer('rating')->nullable()->after('pay_status');
-            $table->text('review')->nullable()->after('rating');
+            if (!Schema::hasColumn('bookings', 'rating')) {
+                $table->integer('rating')->nullable()->after('pay_status');
+            }
+            if (!Schema::hasColumn('bookings', 'review')) {
+                $table->text('review')->nullable()->after('rating');
+            }
         });
     }
 
