@@ -156,9 +156,10 @@ Route::get('/fix-role-enum', function() {
     return redirect('/fix-database');
 });
 
-// Temporary route to delete dummy booking data (to be removed later)
+// Temporary route to delete dummy booking and patient data (to be removed later)
 Route::get('/delete-dummy-data', function () {
     $ids = ['TRX-2605-001', 'TRX-2605-002', 'TRX-2605-003', 'TRX-2605-004', 'TRX-2605-005'];
-    $deleted = \App\Models\Booking::whereIn('id', $ids)->delete();
-    return "Berhasil menghapus " . $deleted . " data booking dummy dari database.";
+    $deletedBookings = \App\Models\Booking::whereIn('id', $ids)->delete();
+    $deletedUsers = \App\Models\User::where('email', 'budi@gmail.com')->delete();
+    return "Berhasil menghapus " . $deletedBookings . " data booking dummy dan " . $deletedUsers . " user customer dummy (Budi Santoso) dari database.";
 });
