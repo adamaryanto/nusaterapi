@@ -15,11 +15,13 @@
     <nav class="flex justify-between items-center py-4 px-8 md:px-16 bg-white border-b sticky top-0 z-50">
         @if(Route::is('customer.booking'))
             <span class="font-bold text-lg text-slate-800">Buat Pesanan &gt; Form Booking</span>
+        @elseif(Route::is('customer.profile'))
+            <span class="font-bold text-lg text-slate-800">Data Diri &gt; Edit Profil</span>
         @else
             <a href="{{ route('landing') }}" class="font-bold text-xl text-slate-900 cursor-pointer">Nusa Terapi Center</a>
         @endif
         
-        @if(!Route::is('customer.booking'))
+        @if(!Route::is('customer.booking') && !Route::is('customer.profile'))
         <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600 items-center">
             <a href="{{ route('landing') }}" class="hover:text-slate-900 transition py-1 {{ Route::is('landing') ? 'text-slate-900 font-bold border-b-2 border-slate-900' : '' }}">Beranda</a>
             <a href="{{ route('landing') }}#layanan" class="hover:text-slate-900 transition">Layanan</a>

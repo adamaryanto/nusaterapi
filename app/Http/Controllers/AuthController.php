@@ -102,7 +102,9 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'required|string|max:20', // It has red asterisk * in mockup so it is required
+            'gender' => 'nullable|string|in:Laki-laki,Perempuan',
+            'birth_date' => 'nullable|date',
             'address' => 'nullable|string',
             'password' => 'nullable|string|min:8|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -123,6 +125,8 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
             'address' => $request->address,
             'avatar_path' => $avatarPath,
         ];
