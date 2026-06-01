@@ -21,6 +21,7 @@
         
         @if(!Route::is('customer.booking'))
         <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600 items-center">
+            <a href="{{ route('landing') }}" class="hover:text-slate-900 transition py-1 {{ Route::is('landing') ? 'text-slate-900 font-bold border-b-2 border-slate-900' : '' }}">Beranda</a>
             <a href="{{ route('landing') }}#layanan" class="hover:text-slate-900 transition">Layanan</a>
             @auth
                 @if(auth()->user()->role === 'customer')
