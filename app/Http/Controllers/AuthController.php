@@ -88,4 +88,51 @@ class AuthController extends Controller
 
         return redirect()->route('landing');
     }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('customer.profile', compact('user'));
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        $user = User::find(Auth::id());
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'password' => 'nullable|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $avatarPath = $user->avatar_path;
+        if ($request->hasFile('avatar')) {
+            if ($avatarPath && file_exists(public_path($avatarPath))) {
+                @unlink(public_path($avatarPath));
+            }
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/avatars'), $filename);
+            $avatarPath = 'uploads/avatars/' . $filename;
+        }
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'avatar_path' => $avatarPath,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('customer.profile')->with('success', 'Profil berhasil diperbarui.');
+    }
 }
