@@ -25,6 +25,7 @@ class BookingController extends Controller
             'schedule_date' => 'required|date',
             'schedule_time' => 'required|string',
             'location_type' => 'required|string|in:home,clinic',
+            'address' => 'nullable|string',
         ]);
 
         // Resolve Service Info from Database
@@ -62,6 +63,14 @@ class BookingController extends Controller
         $address = $request->location_type === 'home' 
             ? ($request->address ?: Auth::user()->address ?: 'Solo, Jawa Tengah') 
             : 'Klinik Utama Nusa Terapi, Solo';
+
+        // Update user profile address in database
+        if ($request->location_type === 'home' && $request->filled('address')) {
+            $user = Auth::user();
+            if ($user) {
+                \App\Models\User::where('id', $user->id)->update(['address' => $request->address]);
+            }
+        }
 
         // Create booking in database
         Booking::create([
