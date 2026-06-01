@@ -63,8 +63,8 @@
 
             <!-- Review Textarea Section -->
             <div class="space-y-2">
-                <label for="review" class="block text-sm font-bold text-slate-800">Tulis Ulasan Anda *</label>
-                <textarea name="review" id="review" rows="5" required placeholder="Tuliskan pengalaman Anda mengenai tekanan pijatan, keramahan terapis, atau ketepatan waktu di sini..."
+                <label for="review" class="block text-sm font-bold text-slate-800">Tulis Ulasan Anda (Opsional)</label>
+                <textarea name="review" id="review" rows="5" placeholder="Tuliskan pengalaman Anda mengenai tekanan pijatan, keramahan terapis, atau ketepatan waktu di sini..."
                           class="w-full border border-gray-200 rounded-xl p-4 text-sm text-slate-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-900 transition resize-none"></textarea>
                 @error('review')
                     <span class="text-xs text-red-500 block mt-1 font-semibold">{{ $message }}</span>

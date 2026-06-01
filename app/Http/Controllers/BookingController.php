@@ -141,7 +141,7 @@ class BookingController extends Controller
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'review' => 'required|string|min:5',
+            'review' => 'nullable|string',
         ]);
 
         $booking = Booking::where('user_id', Auth::id())
