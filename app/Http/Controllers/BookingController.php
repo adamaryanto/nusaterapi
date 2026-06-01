@@ -125,4 +125,46 @@ class BookingController extends Controller
             'message' => 'Pesanan ini tidak dapat dibatalkan.'
         ], 400);
     }
+
+    public function reviewForm($id)
+    {
+        $booking = Booking::with('therapist')
+            ->where('user_id', Auth::id())
+            ->where('id', $id)
+            ->where('status', 'Selesai')
+            ->firstOrFail();
+
+        return view('customer.review', compact('booking'));
+    }
+
+    public function storeReview(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'required|string|min:5',
+        ]);
+
+        $booking = Booking::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->where('status', 'Selesai')
+            ->firstOrFail();
+
+        $booking->update([
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]);
+
+        // Dynamically update the therapist's average rating in the database
+        if ($booking->therapist_id) {
+            $therapist = $booking->therapist;
+            $avg = Booking::where('therapist_id', $therapist->id)
+                ->whereNotNull('rating')
+                ->avg('rating');
+            $therapist->update([
+                'rating' => round($avg, 1)
+            ]);
+        }
+
+        return redirect()->route('customer.history')->with('success', 'Terima kasih atas ulasan Anda!');
+    }
 }

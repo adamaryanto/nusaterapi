@@ -18,7 +18,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'transport_price',
     'total_payment',
     'status',
-    'pay_status'
+    'pay_status',
+    'rating',
+    'review'
 ])]
 class Booking extends Model
 {

@@ -42,6 +42,8 @@ Route::middleware(['auth', 'customer'])->group(function () {
     Route::get('/riwayat-pesanan', [BookingController::class, 'history'])->name('customer.history');
     Route::get('/riwayat-pesanan/detail/{id}', [BookingController::class, 'historyDetail'])->name('customer.history.detail');
     Route::post('/riwayat-pesanan/detail/{id}/cancel', [BookingController::class, 'cancelBooking'])->name('customer.history.cancel');
+    Route::get('/riwayat-pesanan/ulasan/{id}', [BookingController::class, 'reviewForm'])->name('customer.review');
+    Route::post('/riwayat-pesanan/ulasan/{id}', [BookingController::class, 'storeReview'])->name('customer.review.store');
 });
 
 // 5. Admin-only Routes

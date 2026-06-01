@@ -68,7 +68,15 @@
                         </div>
                         
                         <div>
-                            @if($actionText === "Lihat Detail" || $booking->status === 'Dibatalkan')
+                            @if($booking->status === 'Selesai')
+                                @if(is_null($booking->rating))
+                                    <a href="{{ route('customer.review', $booking->id) }}" class="px-4 py-2 text-xs font-bold rounded-lg transition shadow-sm {{ $actionClass }} inline-block">
+                                        {{ $actionText }}
+                                    </a>
+                                @else
+                                    <span class="text-xs text-gray-400 font-bold block py-2">Sudah Diulas</span>
+                                @endif
+                            @elseif($actionText === "Lihat Detail" || $booking->status === 'Dibatalkan')
                                 <a href="{{ route('customer.history.detail', $booking->id) }}" class="px-4 py-2 text-xs font-bold rounded-lg transition shadow-sm {{ $actionClass }} inline-block">
                                     {{ $actionText }}
                                 </a>
