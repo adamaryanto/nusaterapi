@@ -152,6 +152,14 @@ Route::get('/fix-database', function () {
         $output[] = "❌ Bookings table status error: " . $e->getMessage();
     }
 
+    // 4. Run pending migrations
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $output[] = "✅ Database migrations executed successfully!<br><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+    } catch (\Exception $e) {
+        $output[] = "❌ Database migrations error: " . $e->getMessage();
+    }
+
     return implode("<br>", $output);
 });
 
