@@ -42,6 +42,7 @@
                                 <span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase {{ $statusClass }}">{{ $t->status }}</span>
                             </td>
                             <td class="py-4 px-4 space-x-2 flex">
+                                <a href="{{ route('admin.therapists.detail', $t->id) }}" class="border border-emerald-200 bg-white px-3 py-1 rounded-md text-emerald-600 hover:bg-emerald-50 text-xs font-medium transition shadow-sm inline-block">Detail</a>
                                 <a href="{{ route('admin.therapists.edit', $t->id) }}" class="border border-blue-200 bg-white px-3 py-1 rounded-md text-blue-600 hover:bg-blue-50 text-xs font-medium transition shadow-sm inline-block">Edit</a>
                                 <form action="{{ route('admin.therapists.delete', $t->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus terapis ini?')" class="inline">
                                     @csrf

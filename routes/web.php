@@ -62,6 +62,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/therapists/{id}/edit', [AdminController::class, 'therapistsEdit'])->name('therapists.edit');
     Route::post('/therapists/{id}/edit', [AdminController::class, 'therapistsUpdate']);
     Route::post('/therapists/{id}/delete', [AdminController::class, 'therapistsDestroy'])->name('therapists.delete');
+    Route::get('/therapists/{id}/detail', [AdminController::class, 'therapistsDetail'])->name('therapists.detail');
 
     // Bookings & Transactions Management
     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');

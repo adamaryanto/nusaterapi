@@ -291,4 +291,39 @@ class AdminController extends Controller
 
         return redirect()->route('admin.profile')->with('success', 'Profil berhasil diperbarui.');
     }
+
+    public function therapistsDetail(Request $request, $id)
+    {
+        $therapist = Therapist::with('user')->findOrFail($id);
+        $filter = $request->query('filter', 'week'); // default to 'week'
+
+        $query = Booking::with('user')
+            ->where('therapist_id', $id)
+            ->where('status', 'Selesai');
+
+        if ($filter === 'today') {
+            $query->whereDate('schedule_date', \Carbon\Carbon::today()->toDateString());
+        } elseif ($filter === 'month') {
+            $query->whereYear('schedule_date', \Carbon\Carbon::now()->year)
+                  ->whereMonth('schedule_date', \Carbon\Carbon::now()->month);
+        } else { // week
+            $startOfWeek = \Carbon\Carbon::now()->startOfWeek(\Carbon\Carbon::MONDAY)->toDateString();
+            $endOfWeek = \Carbon\Carbon::now()->endOfWeek(\Carbon\Carbon::SUNDAY)->toDateString();
+            $query->whereBetween('schedule_date', [$startOfWeek, $endOfWeek]);
+        }
+
+        $completedBookings = $query->orderBy('schedule_date', 'desc')
+            ->orderBy('schedule_time', 'desc')
+            ->get();
+
+        // Calculate stats
+        $totalSessions = $completedBookings->count();
+        $totalIncome = $completedBookings->sum(function($b) {
+            return round(($b->service_price * 0.7) / 10000) * 10000;
+        });
+
+        return view('admin.therapists_detail', compact(
+            'therapist', 'completedBookings', 'filter', 'totalSessions', 'totalIncome'
+        ));
+    }
 }
