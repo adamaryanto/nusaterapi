@@ -24,8 +24,16 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+        // Calculate weekly booking counts (Monday to Sunday of current week)
+        $weeklyBookingsData = [];
+        $startOfWeek = \Carbon\Carbon::now()->startOfWeek(\Carbon\Carbon::MONDAY);
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startOfWeek->copy()->addDays($i)->toDateString();
+            $weeklyBookingsData[] = Booking::where('schedule_date', $date)->count();
+        }
+
         return view('admin.dashboard', compact(
-            'totalPatients', 'totalBookings', 'totalTransactions', 'totalTherapists', 'recentBookings'
+            'totalPatients', 'totalBookings', 'totalTransactions', 'totalTherapists', 'recentBookings', 'weeklyBookingsData'
         ));
     }
 

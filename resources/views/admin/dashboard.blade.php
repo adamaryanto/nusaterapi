@@ -87,7 +87,7 @@
                 labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
                 datasets: [{
                     label: 'Total Booking',
-                    data: [35, 60, 40, 75, 100, 65, 110], 
+                    data: @json($weeklyBookingsData), 
                     backgroundColor: [
                         '#93c5fd', '#6ee7b7', '#fde047', '#c4b5fd', '#0f172a', '#f9a8d4', '#a3e635'
                     ],
