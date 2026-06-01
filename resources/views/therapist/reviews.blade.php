@@ -50,7 +50,9 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-gray-600 text-sm leading-relaxed italic">
-                            "{{ $review['comment'] }}"
+                            @if(!empty($review['comment']) && $review['comment'] !== '-')
+                                "{{ $review['comment'] }}"
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-center text-xs font-bold text-gray-400 whitespace-nowrap">
                             {{ $review['date'] }}

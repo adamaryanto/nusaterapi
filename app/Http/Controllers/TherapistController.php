@@ -151,7 +151,7 @@ class TherapistController extends Controller
             $realReviews[] = [
                 'customer_name' => $booking->user ? $booking->user->name : 'Pelanggan',
                 'rating' => $booking->rating,
-                'comment' => $booking->review ?? '-',
+                'comment' => $booking->review ?? '',
                 'date' => \Carbon\Carbon::parse($booking->schedule_date)->translatedFormat('d M Y'),
             ];
         }
