@@ -17,6 +17,20 @@ return Application::configure(basePath: dirname(__DIR__))
             'customer'  => \App\Http\Middleware\CustomerMiddleware::class,
             'therapist' => \App\Http\Middleware\TherapistMiddleware::class,
         ]);
+
+        $middleware->redirectTo(
+            guests: '/login',
+            users: function () {
+                if (auth()->check()) {
+                    return match(auth()->user()->role) {
+                        'admin'     => route('admin.dashboard'),
+                        'therapist' => route('therapist.dashboard'),
+                        default     => route('landing'),
+                    };
+                }
+                return '/';
+            }
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
