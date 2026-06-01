@@ -51,7 +51,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     
     // Static lists for views not migrated
-    Route::view('/patients', 'admin.patients')->name('patients');
+    Route::get('/patients', [AdminController::class, 'patients'])->name('patients');
     Route::view('/reviews', 'admin.reviews')->name('reviews');
     Route::view('/reports', 'admin.reports')->name('reports');
 

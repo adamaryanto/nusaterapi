@@ -29,6 +29,25 @@ class AdminController extends Controller
         ));
     }
 
+    public function patients()
+    {
+        $patients = User::where('role', 'customer')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        foreach ($patients as $patient) {
+            $latestBooking = Booking::where('user_id', $patient->id)
+                ->where('status', 'Selesai')
+                ->orderBy('schedule_date', 'desc')
+                ->first();
+            $patient->latest_therapy = $latestBooking 
+                ? \Carbon\Carbon::parse($latestBooking->schedule_date)->translatedFormat('d M Y') 
+                : 'Belum Pernah';
+        }
+
+        return view('admin.patients', compact('patients'));
+    }
+
     public function bookings()
     {
         $bookings = Booking::with('user', 'therapist')->orderBy('created_at', 'desc')->get();
