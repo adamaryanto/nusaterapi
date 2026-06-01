@@ -139,10 +139,25 @@ class TherapistController extends Controller
     {
         $therapist = $this->getTherapist();
 
-        $averageRating = 4.8;
-        $totalReviews = 142;
+        // 1. Fetch real reviews submitted by customers from database
+        $dbBookings = Booking::with('user')
+            ->where('therapist_id', $therapist->id)
+            ->whereNotNull('rating')
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
-        $reviews = [
+        $realReviews = [];
+        foreach ($dbBookings as $booking) {
+            $realReviews[] = [
+                'customer_name' => $booking->user ? $booking->user->name : 'Pelanggan',
+                'rating' => $booking->rating,
+                'comment' => $booking->review ?? '-',
+                'date' => \Carbon\Carbon::parse($booking->schedule_date)->translatedFormat('d M Y'),
+            ];
+        }
+
+        // 2. Default Seeded Mockup Reviews (to keep the page populated)
+        $dummyReviews = [
             [
                 'customer_name' => 'Siti Aminah',
                 'rating' => 5,
@@ -174,6 +189,20 @@ class TherapistController extends Controller
                 'date' => '05 Mei 2026',
             ],
         ];
+
+        // Combine them (real reviews first, then dummy reviews)
+        $reviews = array_merge($realReviews, $dummyReviews);
+
+        // 3. Dynamically calculate average rating and count ulasan from DB + dummy
+        $dbRatingCount = $dbBookings->count();
+        $dbRatingSum = $dbBookings->sum('rating');
+
+        $dummyCount = 142;
+        $dummySum = 4.8 * $dummyCount;
+
+        $totalReviews = $dummyCount + $dbRatingCount;
+        $averageRating = ($dummySum + $dbRatingSum) / $totalReviews;
+        $averageRating = round($averageRating, 1);
 
         return view('therapist.reviews', compact('therapist', 'reviews', 'averageRating', 'totalReviews'));
     }
