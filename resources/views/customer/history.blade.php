@@ -21,10 +21,18 @@
         <div id="orders-list" class="space-y-6">
             @forelse($bookings as $booking)
                 @php
-                    // Dynamic Badge Style
+                    // Dynamic Badge Style & Display Text
                     $badgeClass = "";
+                    $statusText = $booking->status;
                     if ($booking->status === "Akan Datang") {
                         $badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
+                        $statusText = "Dikonfirmasi";
+                    } elseif ($booking->status === "Dalam Perjalanan") {
+                        $badgeClass = "bg-blue-50 text-blue-700 border-blue-200";
+                        $statusText = "Terapis OTW";
+                    } elseif ($booking->status === "Sampai Tujuan") {
+                        $badgeClass = "bg-indigo-50 text-indigo-700 border-indigo-200";
+                        $statusText = "Terapis Tiba";
                     } elseif ($booking->status === "Selesai") {
                         $badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
                     } elseif ($booking->status === "Menunggu Pembayaran") {
@@ -55,7 +63,7 @@
                     <!-- Top Header Section of Card -->
                     <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-5">
                         <div class="flex items-center space-x-3 text-xs font-semibold">
-                            <span class="px-2.5 py-1 rounded-md border text-[10px] uppercase tracking-wider font-bold {{ $badgeClass }}">{{ $booking->status === 'Akan Datang' ? 'Dikonfirmasi' : $booking->status }}</span>
+                            <span class="px-2.5 py-1 rounded-md border text-[10px] uppercase tracking-wider font-bold {{ $badgeClass }}">{{ $statusText }}</span>
                             <span class="text-gray-400">{{ $booking->id }}</span>
                         </div>
                         
@@ -147,7 +155,16 @@
             
             cards.forEach(card => {
                 const cardStatus = card.getAttribute('data-status');
-                if (tabName === "Semua" || cardStatus.toLowerCase() === tabName.toLowerCase()) {
+                let match = false;
+                if (tabName === "Semua") {
+                    match = true;
+                } else if (tabName === "Akan Datang") {
+                    match = (cardStatus === "Akan Datang" || cardStatus === "Dalam Perjalanan" || cardStatus === "Sampai Tujuan");
+                } else {
+                    match = (cardStatus.toLowerCase() === tabName.toLowerCase());
+                }
+
+                if (match) {
                     card.classList.remove('hidden');
                     visibleCount++;
                 } else {

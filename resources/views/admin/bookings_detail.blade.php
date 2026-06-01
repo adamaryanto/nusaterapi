@@ -20,7 +20,7 @@
             </h3>
             
             <div class="flex space-x-2 text-xs font-semibold">
-                @if($booking->status === 'Akan Datang' || $booking->status === 'Menunggu Pembayaran')
+                @if($booking->status === 'Akan Datang' || $booking->status === 'Menunggu Pembayaran' || $booking->status === 'Dalam Perjalanan' || $booking->status === 'Sampai Tujuan')
                     <button onclick="cancelBooking()" class="flex items-center bg-rose-50 border border-rose-200 text-rose-700 px-3 py-2 rounded-lg hover:bg-rose-100 transition shadow-sm">
                         <span class="mr-1.5">❌</span> Batalkan Booking
                     </button>
@@ -137,6 +137,10 @@
                                 <span class="text-gray-400 font-medium">Status Booking</span>
                                 @if($booking->status == 'Akan Datang')
                                     <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">Dikonfirmasi</span>
+                                @elseif($booking->status == 'Dalam Perjalanan')
+                                    <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-200">Dalam Perjalanan</span>
+                                @elseif($booking->status == 'Sampai Tujuan')
+                                    <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-full border border-indigo-200">Sampai Tujuan</span>
                                 @elseif($booking->status == 'Selesai')
                                     <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">Selesai</span>
                                 @elseif($booking->status == 'Dibatalkan')

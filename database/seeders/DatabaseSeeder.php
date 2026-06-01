@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
             'service_price' => 120000,
             'transport_price' => 20000,
             'total_payment' => 140000,
-            'status' => 'Akan Datang', // Diterima
+            'status' => 'Dalam Perjalanan',
             'pay_status' => 'Lunas',
         ]);
 
@@ -117,7 +117,7 @@ class DatabaseSeeder extends Seeder
             'service_price' => 230000,
             'transport_price' => 20000,
             'total_payment' => 250000,
-            'status' => 'Akan Datang',
+            'status' => 'Sampai Tujuan',
             'pay_status' => 'Lunas',
         ]);
 

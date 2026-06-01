@@ -24,7 +24,7 @@ class TherapistController extends Controller
             ->where('schedule_date', $today)->count();
 
         $bookingPending = Booking::where('therapist_id', $therapist->id)
-            ->where('status', 'Akan Datang')->count();
+            ->whereIn('status', ['Akan Datang', 'Dalam Perjalanan', 'Sampai Tujuan'])->count();
 
         $bookingSelesai = Booking::where('therapist_id', $therapist->id)
             ->where('status', 'Selesai')->count();
@@ -61,30 +61,38 @@ class TherapistController extends Controller
         ));
     }
 
-    public function bookings()
+    public function bookings(Request $request)
     {
         $therapist = $this->getTherapist();
-        $bookings = Booking::with('user')
-            ->where('therapist_id', $therapist->id)
-            ->orderBy('schedule_date', 'desc')
+        
+        $filter = $request->query('filter', 'all');
+        $date = $request->query('date');
+
+        if (!in_array($filter, ['all', 'today', 'week', 'month', 'date'])) {
+            $filter = 'all';
+        }
+
+        $query = Booking::with('user')
+            ->where('therapist_id', $therapist->id);
+
+        if ($filter === 'today') {
+            $query->where('schedule_date', Carbon::today()->toDateString());
+        } elseif ($filter === 'week') {
+            $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY)->toDateString();
+            $endOfWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY)->toDateString();
+            $query->whereBetween('schedule_date', [$startOfWeek, $endOfWeek]);
+        } elseif ($filter === 'month') {
+            $query->whereYear('schedule_date', Carbon::now()->year)
+                  ->whereMonth('schedule_date', Carbon::now()->month);
+        } elseif ($filter === 'date' && !empty($date)) {
+            $query->where('schedule_date', $date);
+        }
+
+        $bookings = $query->orderBy('schedule_date', 'desc')
             ->orderBy('schedule_time', 'desc')
             ->get();
 
-        return view('therapist.bookings', compact('therapist', 'bookings'));
-    }
-
-    public function schedule()
-    {
-        $therapist = $this->getTherapist();
-        $upcoming = Booking::with('user')
-            ->where('therapist_id', $therapist->id)
-            ->where('status', 'Akan Datang')
-            ->where('schedule_date', '>=', Carbon::today()->toDateString())
-            ->orderBy('schedule_date')
-            ->orderBy('schedule_time')
-            ->get();
-
-        return view('therapist.schedule', compact('therapist', 'upcoming'));
+        return view('therapist.bookings', compact('therapist', 'bookings', 'filter', 'date'));
     }
 
     public function income()
@@ -131,6 +139,28 @@ class TherapistController extends Controller
     {
         $therapist = $this->getTherapist();
         return view('therapist.reviews', compact('therapist'));
+    }
+
+    public function startJourney($id)
+    {
+        $therapist = $this->getTherapist();
+        $booking = Booking::where('id', $id)
+            ->where('therapist_id', $therapist->id)
+            ->firstOrFail();
+
+        $booking->update(['status' => 'Dalam Perjalanan']);
+        return redirect()->route('therapist.bookings')->with('success', 'Perjalanan dimulai. Hati-hati di jalan!');
+    }
+
+    public function arrive($id)
+    {
+        $therapist = $this->getTherapist();
+        $booking = Booking::where('id', $id)
+            ->where('therapist_id', $therapist->id)
+            ->firstOrFail();
+
+        $booking->update(['status' => 'Sampai Tujuan']);
+        return redirect()->route('therapist.bookings')->with('success', 'Status diperbarui: Anda telah sampai di tujuan.');
     }
 
     public function completeBooking($id)

@@ -145,6 +145,10 @@
                                 <div class="w-2/3">
                                     @if($booking->status == 'Akan Datang')
                                         <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">Dikonfirmasi</span>
+                                    @elseif($booking->status == 'Dalam Perjalanan')
+                                        <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-200">Dalam Perjalanan</span>
+                                    @elseif($booking->status == 'Sampai Tujuan')
+                                        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-full border border-indigo-200">Sampai Tujuan</span>
                                     @elseif($booking->status == 'Selesai')
                                         <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">Selesai</span>
                                     @elseif($booking->status == 'Dibatalkan')

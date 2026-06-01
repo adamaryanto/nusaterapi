@@ -35,6 +35,10 @@
                             <td class="py-4 px-4">
                                 @if($booking->status == 'Akan Datang')
                                     <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200">Dikonfirmasi</span>
+                                @elseif($booking->status == 'Dalam Perjalanan')
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full border border-blue-200">Dalam Perjalanan</span>
+                                @elseif($booking->status == 'Sampai Tujuan')
+                                    <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full border border-indigo-200">Sampai Tujuan</span>
                                 @elseif($booking->status == 'Selesai')
                                     <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200">Selesai</span>
                                 @elseif($booking->status == 'Dibatalkan')

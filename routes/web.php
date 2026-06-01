@@ -9,6 +9,13 @@ use App\Http\Controllers\TherapistController;
 
 // 1. Public Routes
 Route::get('/', function () {
+    if (auth()->check()) {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif (auth()->user()->role === 'therapist') {
+            return redirect()->route('therapist.dashboard');
+        }
+    }
     $settings = \App\Models\WebSetting::all()->pluck('value', 'key');
     $services  = \App\Models\Service::active()->get();
     return view('landing', compact('settings', 'services'));
@@ -78,9 +85,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::middleware(['auth', 'therapist'])->prefix('terapis')->name('therapist.')->group(function () {
     Route::get('/dashboard', [TherapistController::class, 'dashboard'])->name('dashboard');
     Route::get('/bookings', [TherapistController::class, 'bookings'])->name('bookings');
-    Route::get('/jadwal', [TherapistController::class, 'schedule'])->name('schedule');
+
     Route::get('/pendapatan', [TherapistController::class, 'income'])->name('income');
     Route::get('/review', [TherapistController::class, 'reviews'])->name('reviews');
+    Route::post('/bookings/{id}/start-journey', [TherapistController::class, 'startJourney'])->name('start_journey');
+    Route::post('/bookings/{id}/arrive', [TherapistController::class, 'arrive'])->name('arrive');
     Route::post('/bookings/{id}/complete', [TherapistController::class, 'completeBooking'])->name('complete');
     Route::post('/bookings/{id}/accept', [TherapistController::class, 'acceptBooking'])->name('accept');
     Route::post('/bookings/{id}/reject', [TherapistController::class, 'rejectBooking'])->name('reject');
@@ -122,6 +131,19 @@ Route::get('/fix-database', function () {
         }
     } catch (\Exception $e) {
         $output[] = "❌ Therapists table user_id error: " . $e->getMessage();
+    }
+
+    // 3. Fix Bookings Table Status Column (convert ENUM to VARCHAR for flexibility)
+    try {
+        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        if ($driver === 'mysql') {
+            \Illuminate\Support\Facades\DB::unprepared("ALTER TABLE bookings MODIFY COLUMN status VARCHAR(50) DEFAULT 'Pending'");
+            $output[] = "✅ Bookings table status column converted to VARCHAR successfully!";
+        } else {
+            $output[] = "ℹ️ SQLite detected, skipping (handled via migrations).";
+        }
+    } catch (\Exception $e) {
+        $output[] = "❌ Bookings table status error: " . $e->getMessage();
     }
 
     return implode("<br>", $output);

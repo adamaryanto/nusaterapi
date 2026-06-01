@@ -26,11 +26,7 @@
                {{ Route::is('therapist.bookings') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-500 hover:bg-gray-50' }}">
                 List Booking Masuk
             </a>
-            <a href="{{ route('therapist.schedule') }}"
-               class="block px-4 py-2.5 rounded-lg text-sm font-medium transition
-               {{ Route::is('therapist.schedule') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-500 hover:bg-gray-50' }}">
-                Jadwal Saya
-            </a>
+
             <a href="{{ route('therapist.income') }}"
                class="block px-4 py-2.5 rounded-lg text-sm font-medium transition
                {{ Route::is('therapist.income') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-500 hover:bg-gray-50' }}">

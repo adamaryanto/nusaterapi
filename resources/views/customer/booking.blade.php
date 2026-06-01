@@ -7,7 +7,7 @@
 
 
 @section('content')
-    <form action="{{ route('customer.booking') }}" method="POST">
+    <form id="booking-form" action="{{ route('customer.booking') }}" method="POST">
         @csrf
         <input type="hidden" name="schedule_time" id="hidden-schedule-time" value="13:00">
         <input type="hidden" name="address" id="hidden-address" value="">
@@ -192,8 +192,7 @@
             <!-- Midtrans Header -->
             <div class="px-5 py-4 border-b border-gray-100 bg-slate-50 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                    <span class="text-[10px] font-extrabold bg-[#1d4ed8] text-white px-2 py-0.5 rounded">MIDTRANS</span>
-                    <span class="text-xs font-extrabold text-slate-800">Nusa Terapi Center</span>
+                    <span class="text-sm font-extrabold text-slate-800">Pembayaran — Nusa Terapi Center</span>
                 </div>
                 <div class="flex items-center space-x-1.5 text-slate-600 text-xs font-bold">
                     <span id="midtrans-timer">14:59</span>
@@ -327,7 +326,7 @@
                             <div class="w-10 h-10 bg-white rounded"></div>
                         </div>
                     </div>
-                    <p class="text-[10px] text-slate-400 px-4">QR Code di atas hanya simulasi integrasi Midtrans Snap.</p>
+                    <p class="text-[10px] text-slate-400 px-4">Scan QR Code di atas menggunakan aplikasi e-Wallet Anda.</p>
                     
                     <div class="pt-4">
                         <button type="button" onclick="simulatePaymentSuccess()" class="w-full py-3.5 bg-cyan-600 text-white rounded-xl text-sm font-bold hover:bg-cyan-700 transition shadow-md shadow-cyan-200">
@@ -341,7 +340,7 @@
                     <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
                     <div>
                         <p class="text-sm font-bold text-slate-800" id="loading-title">Memverifikasi Pembayaran...</p>
-                        <p class="text-xs text-gray-400 mt-1" id="loading-subtitle">Menghubungkan ke bank partner Midtrans...</p>
+                        <p class="text-xs text-gray-400 mt-1" id="loading-subtitle">Menghubungkan ke bank partner...</p>
                     </div>
                 </div>
 
@@ -359,7 +358,7 @@
 
             <!-- Footer Secure Message -->
             <div class="px-5 py-3 border-t border-gray-100 bg-slate-50 text-center flex justify-center items-center space-x-1.5 text-gray-400 text-[9px] font-bold">
-                <span>🔒 Secure payment by Midtrans Snap</span>
+                <span>🔒 Pembayaran aman & terenkripsi</span>
             </div>
 
         </div>
@@ -596,7 +595,27 @@
 
         function selectMidtransMethod(method) {
             document.getElementById('midtrans-step-select').classList.add('hidden');
-            simulatePaymentSuccess();
+
+            if (method === 'gopay') {
+                // Show GoPay QR step
+                document.getElementById('midtrans-step-gopay').classList.remove('hidden');
+            } else {
+                // Show Virtual Account step for bank transfer methods
+                const vaStep = document.getElementById('midtrans-step-bca');
+                vaStep.classList.remove('hidden');
+
+                // Set VA title and number based on method
+                const vaTitle = document.getElementById('midtrans-va-title');
+                const vaNumber = document.getElementById('midtrans-va-number');
+                const vaNumbers = {
+                    bca: { title: 'Nomor BCA Virtual Account', number: '88012081234567890' },
+                    mandiri: { title: 'Nomor Mandiri Virtual Account', number: '89012098765432100' },
+                    bni: { title: 'Nomor BNI Virtual Account', number: '88089055667788900' },
+                };
+                const info = vaNumbers[method] || vaNumbers.bca;
+                vaTitle.innerText = info.title;
+                vaNumber.innerText = info.number;
+            }
         }
 
         function backToMethods() {
@@ -621,6 +640,8 @@
             });
         }
 
+        let paymentCompleted = false;
+
         function simulatePaymentSuccess() {
             document.getElementById('midtrans-step-bca').classList.add('hidden');
             document.getElementById('midtrans-step-gopay').classList.add('hidden');
@@ -632,7 +653,7 @@
             const loadSubtitle = document.getElementById('loading-subtitle');
             
             loadTitle.innerText = "Memverifikasi Pembayaran...";
-            loadSubtitle.innerText = "Menghubungkan ke bank partner Midtrans...";
+            loadSubtitle.innerText = "Menghubungkan ke bank partner...";
             
             setTimeout(() => {
                 loadTitle.innerText = "Memproses Transaksi...";
@@ -645,17 +666,21 @@
                     stepSuccess.classList.remove('hidden');
                     
                     setTimeout(() => {
-                        document.querySelector('form').submit();
+                        paymentCompleted = true;
+                        document.getElementById('booking-form').submit();
                     }, 1500);
                     
                 }, 1200);
             }, 1000);
         }
 
-        // Intercept Form Submit to show Midtrans Modal
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            startPaymentFlow();
+        // Intercept Form Submit to show Payment Modal
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            if (!paymentCompleted) {
+                e.preventDefault();
+                startPaymentFlow();
+            }
+            // If paymentCompleted is true, let the form submit normally
         });
     </script>
 @endsection
