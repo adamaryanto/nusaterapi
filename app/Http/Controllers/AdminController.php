@@ -93,6 +93,15 @@ class AdminController extends Controller
     public function therapists()
     {
         $therapists = Therapist::all();
+        foreach ($therapists as $t) {
+            $t->total_patients = Booking::where('therapist_id', $t->id)
+                ->distinct('user_id')
+                ->count('user_id');
+
+            $t->total_income = Booking::where('therapist_id', $t->id)
+                ->where('status', 'Selesai')
+                ->sum('total_payment');
+        }
         return view('admin.therapists', compact('therapists'));
     }
 

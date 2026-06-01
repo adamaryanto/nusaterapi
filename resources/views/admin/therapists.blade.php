@@ -19,6 +19,8 @@
                         <th class="pb-3 px-4 font-medium w-16">No</th>
                         <th class="pb-3 px-4 font-medium">Nama</th>
                         <th class="pb-3 px-4 font-medium">Spesialisasi</th>
+                        <th class="pb-3 px-4 font-medium">Total Pasien</th>
+                        <th class="pb-3 px-4 font-medium">Total Pendapatan</th>
                         <th class="pb-3 px-4 font-medium">Status</th>
                         <th class="pb-3 px-4 font-medium w-48">Action</th>
                     </tr>
@@ -34,6 +36,8 @@
                             <td class="py-4 px-4">{{ $index + 1 }}</td>
                             <td class="py-4 px-4 font-semibold text-slate-900">{{ $t->name }}</td>
                             <td class="py-4 px-4 text-gray-600">{{ $t->specialty }}</td>
+                            <td class="py-4 px-4 text-slate-600 font-medium">{{ $t->total_patients }} Orang</td>
+                            <td class="py-4 px-4 text-emerald-600 font-semibold">Rp {{ number_format($t->total_income, 0, ',', '.') }}</td>
                             <td class="py-4 px-4">
                                 <span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase {{ $statusClass }}">{{ $t->status }}</span>
                             </td>
@@ -47,7 +51,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-6 text-center text-gray-400">Belum ada terapis.</td>
+                            <td colspan="7" class="py-6 text-center text-gray-400">Belum ada terapis.</td>
                         </tr>
                     @endforelse
                 </tbody>
