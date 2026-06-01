@@ -15,6 +15,7 @@
                     <tr class="border-b border-gray-200 text-sm text-gray-500">
                         <th class="pb-3 px-4 font-medium w-16">No</th>
                         <th class="pb-3 px-4 font-medium">Nama</th>
+                        <th class="pb-3 px-4 font-medium">Jenis Kelamin</th>
                         <th class="pb-3 px-4 font-medium">Email</th>
                         <th class="pb-3 px-4 font-medium">No HP</th>
                         <th class="pb-3 px-4 font-medium">Alamat</th>
@@ -27,6 +28,7 @@
                     <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
                         <td class="py-4 px-4">{{ $index + 1 }}</td>
                         <td class="py-4 px-4 font-medium text-slate-900">{{ $patient->name }}</td>
+                        <td class="py-4 px-4 text-slate-650 font-medium">{{ $patient->gender ?: '—' }}</td>
                         <td class="py-4 px-4 text-gray-500 font-medium">{{ $patient->email }}</td>
                         <td class="py-4 px-4">{{ $patient->phone ?: '—' }}</td>
                         <td class="py-4 px-4 text-gray-500">{{ $patient->address ?: '—' }}</td>
@@ -43,7 +45,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="py-8 text-center text-gray-400">
+                        <td colspan="8" class="py-8 text-center text-gray-400">
                             Belum ada data pasien terdaftar.
                         </td>
                     </tr>
