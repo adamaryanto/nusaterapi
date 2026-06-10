@@ -76,9 +76,7 @@ class AuthController extends Controller
             'role' => 'customer',
         ]);
 
-        Auth::login($user);
-
-        return redirect()->route('landing');
+        return redirect()->route('login')->with('success', 'Akun Anda berhasil dibuat! Silakan login menggunakan email dan password Anda.');
     }
 
     public function logout(Request $request)
