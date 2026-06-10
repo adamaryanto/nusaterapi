@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @yield('styles')
 </head>
-<body class="bg-gray-50 h-screen flex overflow-hidden text-gray-800">
+<body class="bg-gray-50 h-screen flex overflow-hidden text-gray-800" style="font-family: 'Inter', sans-serif;">
 
     <!-- Sidebar Aside -->
     <aside class="w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex z-20 shadow-sm">
