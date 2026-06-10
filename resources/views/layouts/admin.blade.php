@@ -22,6 +22,9 @@
             <a href="{{ route('admin.patients') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.patients*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
                 Manajemen Pasien
             </a>
+            <a href="{{ route('admin.membership') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.membership*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+                Manajemen Membership
+            </a>
             <a href="{{ route('admin.therapists') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.therapists*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
                 Manajemen Terapis
             </a>

@@ -342,4 +342,31 @@ class AdminController extends Controller
         $statusMessage = $user->is_member ? 'Membership pasien berhasil diaktifkan.' : 'Membership pasien berhasil dinonaktifkan.';
         return redirect()->back()->with('success', $statusMessage);
     }
+
+    public function membershipSettings()
+    {
+        $settings = \App\Models\WebSetting::all()->pluck('value', 'key');
+        
+        $weeklyLimit = (int)($settings['membership_weekly_limit'] ?? 3);
+        $discountAmount = (int)($settings['membership_discount_amount'] ?? 15000);
+        
+        $customers = User::where('role', 'customer')
+            ->orderBy('name', 'asc')
+            ->get();
+            
+        return view('admin.membership', compact('customers', 'weeklyLimit', 'discountAmount'));
+    }
+
+    public function updateMembershipSettings(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'membership_weekly_limit' => 'required|integer|min:0',
+            'membership_discount_amount' => 'required|integer|min:0',
+        ]);
+        
+        \App\Models\WebSetting::set('membership_weekly_limit', $request->membership_weekly_limit);
+        \App\Models\WebSetting::set('membership_discount_amount', $request->membership_discount_amount);
+        
+        return redirect()->route('admin.membership')->with('success', 'Pengaturan membership berhasil disimpan.');
+    }
 }
