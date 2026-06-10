@@ -21,6 +21,7 @@
             @auth
                 @if(auth()->user()->role === 'customer')
                     <a id="nav-history" href="{{ route('customer.history') }}" class="hover:text-slate-900 transition py-1 {{ Route::is('customer.history') ? 'text-slate-900 font-bold border-b-2 border-slate-900' : '' }}">Riwayat Pesanan</a>
+                    <a id="nav-membership" href="{{ route('customer.membership') }}" class="hover:text-slate-900 transition py-1 {{ Route::is('customer.membership') ? 'text-slate-900 font-bold border-b-2 border-slate-900' : '' }}">Membership</a>
                 @endif
             @endauth
             <a id="nav-link-tentang-kami" href="{{ route('landing') }}#tentang-kami" class="hover:text-slate-900 transition py-1 text-gray-600">Tentang Kami</a>
@@ -54,6 +55,7 @@
                         @else
                             <a href="{{ route('customer.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Profil Saya</a>
                             <a href="{{ route('customer.history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Riwayat Pesanan</a>
+                            <a href="{{ route('customer.membership') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Membership</a>
                         @endif
                         <hr class="border-gray-100">
                         <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition font-medium">Logout</button>

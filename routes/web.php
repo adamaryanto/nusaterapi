@@ -48,6 +48,8 @@ Route::middleware(['auth', 'customer'])->group(function () {
 
     Route::get('/profile', [AuthController::class, 'profile'])->name('customer.profile');
     Route::post('/profile', [AuthController::class, 'profileUpdate']);
+    
+    Route::get('/membership', [AuthController::class, 'membership'])->name('customer.membership');
 });
 
 // 5. Admin-only Routes

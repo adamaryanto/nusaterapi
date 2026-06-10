@@ -139,4 +139,29 @@ class AuthController extends Controller
 
         return redirect()->route('customer.profile')->with('success', 'Profil berhasil diperbarui.');
     }
+
+    public function membership()
+    {
+        $user = Auth::user();
+        $isMember = (bool)$user->is_member;
+        
+        $weeklyLimit = 0;
+        $discountAmount = 0;
+        $usedCount = 0;
+        
+        if ($isMember) {
+            $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
+            $discountAmount = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
+            
+            $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
+            $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
+            
+            $usedCount = \App\Models\Booking::where('user_id', $user->id)
+                ->where('is_membership_discount_applied', true)
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->count();
+        }
+        
+        return view('customer.membership', compact('user', 'isMember', 'weeklyLimit', 'discountAmount', 'usedCount'));
+    }
 }
