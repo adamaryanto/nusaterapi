@@ -17,24 +17,24 @@
         </div>
         <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
             <a href="{{ route('therapist.dashboard') }}"
-               class="block px-4 py-2.5 rounded-lg text-sm font-medium transition
-               {{ Route::is('therapist.dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-500 hover:bg-gray-50' }}">
+               class="block px-4 py-2.5 rounded-lg text-sm transition
+               {{ Route::is('therapist.dashboard') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }}">
                 Dashboard
             </a>
             <a href="{{ route('therapist.bookings') }}"
-               class="block px-4 py-2.5 rounded-lg text-sm font-medium transition
-               {{ Route::is('therapist.bookings') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-500 hover:bg-gray-50' }}">
+               class="block px-4 py-2.5 rounded-lg text-sm transition
+               {{ Route::is('therapist.bookings') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }}">
                 List Booking Masuk
             </a>
 
             <a href="{{ route('therapist.income') }}"
-               class="block px-4 py-2.5 rounded-lg text-sm font-medium transition
-               {{ Route::is('therapist.income') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-500 hover:bg-gray-50' }}">
+               class="block px-4 py-2.5 rounded-lg text-sm transition
+               {{ Route::is('therapist.income') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }}">
                 Pendapatan
             </a>
             <a href="{{ route('therapist.reviews') }}"
-               class="block px-4 py-2.5 rounded-lg text-sm font-medium transition
-               {{ Route::is('therapist.reviews') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-500 hover:bg-gray-50' }}">
+               class="block px-4 py-2.5 rounded-lg text-sm transition
+               {{ Route::is('therapist.reviews') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }}">
                 Rating & Review
             </a>
         </nav>

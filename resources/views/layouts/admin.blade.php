@@ -16,31 +16,31 @@
             <a href="{{ route('landing') }}" class="font-bold text-lg text-slate-900">Nusa Terapi Center</a>
         </div>
         <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.dashboard') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Dashboard
             </a>
-            <a href="{{ route('admin.patients') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.patients*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.patients') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.patients*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Manajemen Pasien
             </a>
-            <a href="{{ route('admin.membership') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.membership*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.membership') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.membership*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Manajemen Membership
             </a>
-            <a href="{{ route('admin.therapists') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.therapists*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.therapists') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.therapists*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Manajemen Terapis
             </a>
-            <a href="{{ route('admin.bookings') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.bookings*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.bookings') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.bookings*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Manajemen Booking
             </a>
-            <a href="{{ route('admin.transactions') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.transactions*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.transactions') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.transactions*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Data Transaksi
             </a>
-            <a href="{{ route('admin.web_management') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.web_management*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.web_management') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.web_management*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Manajemen Web
             </a>
-            <a href="{{ route('admin.reviews') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.reviews*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition mt-4">
+            <a href="{{ route('admin.reviews') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.reviews*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition mt-4">
                 Rating & Review
             </a>
-            <a href="{{ route('admin.reports') }}" class="block px-4 py-3 rounded-lg text-sm font-medium {{ Route::is('admin.reports*') ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }} transition">
+            <a href="{{ route('admin.reports') }}" class="block px-4 py-3 rounded-lg text-sm {{ Route::is('admin.reports*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50 font-medium' }} transition">
                 Laporan
             </a>
         </nav>
