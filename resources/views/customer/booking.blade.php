@@ -164,6 +164,10 @@
                                 <span>Biaya Transportasi</span>
                                 <span class="text-slate-800" id="detail-transport-price">Rp 20.000</span>
                             </div>
+                            <div class="flex justify-between text-emerald-600 hidden" id="summary-discount-row">
+                                <span>Potongan Member</span>
+                                <span id="detail-discount-price">-Rp 0</span>
+                            </div>
                             
                             <hr class="border-gray-100">
                             
@@ -410,6 +414,9 @@
         let selectedLocationType = "home"; // home or clinic
         let selectedAddress = {!! json_encode(auth()->user()->address ?? "Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123") !!};
         let transportFee = 20000;
+        const isMember = {{ $isMember ? 'true' : 'false' }};
+        const hasDiscountQuota = {{ $hasDiscountQuota ? 'true' : 'false' }};
+        const discountAmount = {{ $discountAmount }};
 
         function onAddressInput() {
             selectedAddress = document.getElementById('input-address').value;
@@ -480,7 +487,7 @@
                 document.getElementById('detail-location-type').innerText = "Home Service";
                 document.getElementById('detail-location-address').innerText = selectedAddress;
                 document.getElementById('address-input-group').classList.remove('hidden');
-                transportFee = 20000;
+                transportFee = isMember ? 0 : 20000;
                 servicePrice = serviceData.price_home;
             } else {
                 document.getElementById('detail-location-type').innerText = "Datang ke Klinik";
@@ -493,9 +500,28 @@
 
             // 4. Prices Calculations
             document.getElementById('detail-service-price').innerText = formatPrice(servicePrice);
-            document.getElementById('detail-transport-price').innerText = formatPrice(transportFee);
             
-            const totalPayment = servicePrice + transportFee;
+            if (selectedLocationType === 'home' && isMember) {
+                document.getElementById('detail-transport-price').innerText = "Gratis (Member)";
+            } else {
+                document.getElementById('detail-transport-price').innerText = formatPrice(transportFee);
+            }
+
+            let appliedDiscount = 0;
+            const discountRow = document.getElementById('summary-discount-row');
+            if (isMember && hasDiscountQuota) {
+                appliedDiscount = discountAmount;
+                if (discountRow) {
+                    discountRow.classList.remove('hidden');
+                    document.getElementById('detail-discount-price').innerText = "-" + formatPrice(appliedDiscount);
+                }
+            } else {
+                if (discountRow) {
+                    discountRow.classList.add('hidden');
+                }
+            }
+            
+            const totalPayment = servicePrice + transportFee - appliedDiscount;
             document.getElementById('detail-total-payment').innerText = formatPrice(totalPayment);
         }
 

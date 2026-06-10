@@ -20,7 +20,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'status',
     'pay_status',
     'rating',
-    'review'
+    'review',
+    'discount_amount',
+    'is_membership_discount_applied'
 ])]
 class Booking extends Model
 {

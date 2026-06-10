@@ -19,7 +19,28 @@ class BookingController extends Controller
         }
         $therapists = $query->get();
         $services   = Service::active()->get();
-        return view('customer.booking', compact('therapists', 'services'));
+
+        $user = Auth::user();
+        $isMember = (bool)$user->is_member;
+        $hasDiscountQuota = false;
+        $discountAmount = 0;
+
+        if ($isMember) {
+            $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
+            $discountAmount = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
+            
+            $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
+            $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
+            
+            $usedCount = Booking::where('user_id', $user->id)
+                ->where('is_membership_discount_applied', true)
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->count();
+            
+            $hasDiscountQuota = ($usedCount < $weeklyLimit);
+        }
+
+        return view('customer.booking', compact('therapists', 'services', 'isMember', 'hasDiscountQuota', 'discountAmount'));
     }
 
     public function storeBooking(Request $request)
@@ -56,10 +77,39 @@ class BookingController extends Controller
             return back()->withErrors(['therapist_name' => 'Terapis yang dipilih tidak tersedia atau tidak sesuai dengan jenis kelamin Anda.'])->withInput();
         }
 
-        // Calculate transportation fee
-        $transportFee = $request->location_type === 'home' ? 20000 : 0;
+        $user = Auth::user();
+        $isMember = (bool)$user->is_member;
+
+        // Calculate transportation fee (free if member)
+        $transportFee = 0;
+        if ($request->location_type === 'home') {
+            $transportFee = $isMember ? 0 : 20000;
+        }
+
         $servicePrice = $request->location_type === 'home' ? $serviceModel->price_home : $serviceModel->price_clinic;
-        $totalPayment = $servicePrice + $transportFee;
+
+        // Calculate discount
+        $discountAmount = 0;
+        $isMembershipDiscountApplied = false;
+        if ($isMember) {
+            $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
+            $discountValue = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
+            
+            $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
+            $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
+            
+            $usedCount = Booking::where('user_id', $user->id)
+                ->where('is_membership_discount_applied', true)
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->count();
+            
+            if ($usedCount < $weeklyLimit) {
+                $discountAmount = $discountValue;
+                $isMembershipDiscountApplied = true;
+            }
+        }
+
+        $totalPayment = $servicePrice + $transportFee - $discountAmount;
 
         // Generate Order ID format: TRX-2605-XXX
         // Using current year/month for formatting e.g. TRX-2605-123
@@ -102,6 +152,8 @@ class BookingController extends Controller
             'address'       => $address,
             'service_price' => $servicePrice,
             'transport_price' => $transportFee,
+            'discount_amount' => $discountAmount,
+            'is_membership_discount_applied' => $isMembershipDiscountApplied,
             'total_payment' => $totalPayment,
             'status'        => $status,
             'pay_status'    => $payStatus,

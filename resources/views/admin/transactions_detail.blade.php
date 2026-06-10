@@ -108,8 +108,20 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-400 font-medium">Biaya Transportasi</span>
-                                <span class="text-slate-800 font-medium">Rp {{ number_format($booking->transport_price, 0, ',', '.') }}</span>
+                                <span class="text-slate-800 font-medium">
+                                    @if($booking->transport_price == 0 && $booking->location_type === 'home')
+                                        Gratis (Member)
+                                    @else
+                                        Rp {{ number_format($booking->transport_price, 0, ',', '.') }}
+                                    @endif
+                                </span>
                             </div>
+                            @if($booking->discount_amount > 0)
+                            <div class="flex justify-between text-emerald-600 font-medium">
+                                <span>Potongan Member</span>
+                                <span>-Rp {{ number_format($booking->discount_amount, 0, ',', '.') }}</span>
+                            </div>
+                            @endif
                             
                             <hr class="border-gray-100 my-2">
                             

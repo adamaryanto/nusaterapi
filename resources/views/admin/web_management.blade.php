@@ -242,6 +242,44 @@
         </div>
     </div>
 
+    {{-- ===================================== --}}
+    {{-- 4. PENGATURAN MEMBERSHIP --}}
+    {{-- ===================================== --}}
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <h3 class="font-bold text-slate-800 text-base">4. Pengaturan Membership</h3>
+        </div>
+        <form action="{{ route('admin.web_management.membership') }}" method="POST">
+            @csrf
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Batas Penggunaan Potongan per Minggu <span class="text-rose-500">*</span></label>
+                        <input type="number" name="membership_weekly_limit" required min="0"
+                               value="{{ $settings->get('membership_weekly_limit', '3') }}"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 transition"
+                               placeholder="Contoh: 3">
+                        <p class="text-xs text-gray-400 mt-1.5">Berapa kali potongan harga dapat digunakan oleh member dalam seminggu.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Jumlah Potongan Harga (Rp) <span class="text-rose-500">*</span></label>
+                        <input type="number" name="membership_discount_amount" required min="0"
+                               value="{{ $settings->get('membership_discount_amount', '15000') }}"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 transition"
+                               placeholder="Contoh: 15000">
+                        <p class="text-xs text-gray-400 mt-1.5">Besar potongan harga per transaksi dalam Rupiah (e.g. 15000).</p>
+                    </div>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button type="submit"
+                            class="bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition shadow-sm">
+                        Simpan Pengaturan Membership
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
 </div>
 
 {{-- ===================================== --}}

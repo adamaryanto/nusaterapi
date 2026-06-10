@@ -332,4 +332,14 @@ class AdminController extends Controller
             'therapist', 'completedBookings', 'filter', 'totalSessions', 'totalIncome'
         ));
     }
+
+    public function toggleMembership($id)
+    {
+        $user = User::where('role', 'customer')->findOrFail($id);
+        $user->is_member = !$user->is_member;
+        $user->save();
+
+        $statusMessage = $user->is_member ? 'Membership pasien berhasil diaktifkan.' : 'Membership pasien berhasil dinonaktifkan.';
+        return redirect()->back()->with('success', $statusMessage);
+    }
 }

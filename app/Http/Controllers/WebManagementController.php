@@ -160,4 +160,17 @@ class WebManagementController extends Controller
         $service->delete();
         return redirect()->route('admin.web_management')->with('success', 'Layanan berhasil dihapus.');
     }
+
+    public function updateMembership(Request $request)
+    {
+        $request->validate([
+            'membership_weekly_limit' => 'required|integer|min:0',
+            'membership_discount_amount' => 'required|integer|min:0',
+        ]);
+
+        WebSetting::set('membership_weekly_limit', $request->membership_weekly_limit);
+        WebSetting::set('membership_discount_amount', $request->membership_discount_amount);
+
+        return redirect()->route('admin.web_management')->with('success', 'Pengaturan membership berhasil disimpan.');
+    }
 }

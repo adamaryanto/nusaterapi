@@ -86,6 +86,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/web-management/services', [WebManagementController::class, 'servicesStore'])->name('web_management.services.store');
     Route::post('/web-management/services/{id}/update', [WebManagementController::class, 'servicesUpdate'])->name('web_management.services.update');
     Route::delete('/web-management/services/{id}', [WebManagementController::class, 'servicesDestroy'])->name('web_management.services.destroy');
+    Route::post('/web-management/membership', [WebManagementController::class, 'updateMembership'])->name('web_management.membership');
+
+    // Patient Membership Toggle
+    Route::post('/patients/{id}/toggle-membership', [AdminController::class, 'toggleMembership'])->name('patients.toggle_membership');
 });
 
 // 6. Therapist-only Routes
