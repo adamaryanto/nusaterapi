@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'phone', 'gender', 'birth_date', 'address', 'avatar_path', 'role', 'is_member'])]
+#[Fillable(['name', 'email', 'password', 'phone', 'gender', 'birth_date', 'address', 'avatar_path', 'role', 'is_member', 'membership_tier_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -20,6 +20,11 @@ class User extends Authenticatable
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function membershipTier()
+    {
+        return $this->belongsTo(MembershipTier::class);
     }
 
     /**

@@ -415,8 +415,10 @@
         let selectedAddress = {!! json_encode(auth()->user()->address ?? "Jl. Slamet Riyadi No. 12, Kec. Banjarsari\nKota Solo, Jawa Tengah, 57123") !!};
         let transportFee = 20000;
         const isMember = {{ $isMember ? 'true' : 'false' }};
-        const hasDiscountQuota = {{ $hasDiscountQuota ? 'true' : 'false' }};
-        const discountAmount = {{ $discountAmount }};
+        const discountPercentageWd = {{ $discountPercentageWd ?? 0 }};
+        const discountPercentageWe = {{ $discountPercentageWe ?? 0 }};
+        const hasDiscountQuotaWd = {{ $hasDiscountQuotaWd ? 'true' : 'false' }};
+        const hasDiscountQuotaWe = {{ $hasDiscountQuotaWe ? 'true' : 'false' }};
 
         function onAddressInput() {
             selectedAddress = document.getElementById('input-address').value;
@@ -507,10 +509,21 @@
                 document.getElementById('detail-transport-price').innerText = formatPrice(transportFee);
             }
 
+            // Resolve weekday/weekend based on selected schedule date
+            const dateInputVal = document.getElementById('select-date').value;
+            let isWeekendSelected = false;
+            if (dateInputVal) {
+                const day = new Date(dateInputVal).getDay();
+                isWeekendSelected = (day === 0 || day === 6); // 0 = Sunday, 6 = Saturday
+            }
+
+            const discountPercentage = isWeekendSelected ? discountPercentageWe : discountPercentageWd;
+            const hasQuota = isWeekendSelected ? hasDiscountQuotaWe : hasDiscountQuotaWd;
+
             let appliedDiscount = 0;
             const discountRow = document.getElementById('summary-discount-row');
-            if (isMember && hasDiscountQuota) {
-                appliedDiscount = discountAmount;
+            if (isMember && hasQuota) {
+                appliedDiscount = (servicePrice * discountPercentage) / 100;
                 if (discountRow) {
                     discountRow.classList.remove('hidden');
                     document.getElementById('detail-discount-price').innerText = "-" + formatPrice(appliedDiscount);

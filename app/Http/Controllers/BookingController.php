@@ -22,25 +22,61 @@ class BookingController extends Controller
 
         $user = Auth::user();
         $isMember = (bool)$user->is_member;
-        $hasDiscountQuota = false;
-        $discountAmount = 0;
+        
+        $discountPercentageWd = 0;
+        $discountPercentageWe = 0;
+        $hasDiscountQuotaWd = false;
+        $hasDiscountQuotaWe = false;
 
         if ($isMember) {
-            $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
-            $discountAmount = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
+            $tier = $user->membershipTier;
+            if (!$tier) {
+                $tier = \App\Models\MembershipTier::active()->first();
+            }
             
-            $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
-            $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
-            
-            $usedCount = Booking::where('user_id', $user->id)
-                ->where('is_membership_discount_applied', true)
-                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-                ->count();
-            
-            $hasDiscountQuota = ($usedCount < $weeklyLimit);
+            if ($tier) {
+                $discountPercentageWd = (int)$tier->discount_wd;
+                $discountPercentageWe = (int)$tier->discount_we;
+                
+                $startDate = \Carbon\Carbon::now()->subDays($tier->window);
+                
+                // Weekday bookings count
+                if ($tier->limit_wd === null) {
+                    $hasDiscountQuotaWd = true;
+                } else {
+                    $usedCountWd = Booking::where('user_id', $user->id)
+                        ->where('is_membership_discount_applied', true)
+                        ->where('created_at', '>=', $startDate)
+                        ->get()
+                        ->filter(function($booking) {
+                            return !\Carbon\Carbon::parse($booking->schedule_date)->isWeekend();
+                        })
+                        ->count();
+                    $hasDiscountQuotaWd = ($usedCountWd < $tier->limit_wd);
+                }
+                
+                // Weekend bookings count
+                if ($tier->limit_we === null) {
+                    $hasDiscountQuotaWe = true;
+                } else {
+                    $usedCountWe = Booking::where('user_id', $user->id)
+                        ->where('is_membership_discount_applied', true)
+                        ->where('created_at', '>=', $startDate)
+                        ->get()
+                        ->filter(function($booking) {
+                            return \Carbon\Carbon::parse($booking->schedule_date)->isWeekend();
+                        })
+                        ->count();
+                    $hasDiscountQuotaWe = ($usedCountWe < $tier->limit_we);
+                }
+            }
         }
 
-        return view('customer.booking', compact('therapists', 'services', 'isMember', 'hasDiscountQuota', 'discountAmount'));
+        return view('customer.booking', compact(
+            'therapists', 'services', 'isMember', 
+            'discountPercentageWd', 'discountPercentageWe', 
+            'hasDiscountQuotaWd', 'hasDiscountQuotaWe'
+        ));
     }
 
     public function storeBooking(Request $request)
@@ -92,20 +128,38 @@ class BookingController extends Controller
         $discountAmount = 0;
         $isMembershipDiscountApplied = false;
         if ($isMember) {
-            $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
-            $discountValue = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
+            $tier = $user->membershipTier;
+            if (!$tier) {
+                $tier = \App\Models\MembershipTier::active()->first();
+            }
             
-            $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
-            $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
-            
-            $usedCount = Booking::where('user_id', $user->id)
-                ->where('is_membership_discount_applied', true)
-                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-                ->count();
-            
-            if ($usedCount < $weeklyLimit) {
-                $discountAmount = $discountValue;
-                $isMembershipDiscountApplied = true;
+            if ($tier) {
+                $bookingDate = \Carbon\Carbon::parse($request->schedule_date);
+                $isWeekend = $bookingDate->isWeekend();
+                
+                $discountPercentage = $isWeekend ? $tier->discount_we : $tier->discount_wd;
+                $limit = $isWeekend ? $tier->limit_we : $tier->limit_wd;
+                $startDate = \Carbon\Carbon::now()->subDays($tier->window);
+                
+                $hasQuota = false;
+                if ($limit === null) {
+                    $hasQuota = true;
+                } else {
+                    $usedCount = Booking::where('user_id', $user->id)
+                        ->where('is_membership_discount_applied', true)
+                        ->where('created_at', '>=', $startDate)
+                        ->get()
+                        ->filter(function($booking) use ($isWeekend) {
+                            return \Carbon\Carbon::parse($booking->schedule_date)->isWeekend() === $isWeekend;
+                        })
+                        ->count();
+                    $hasQuota = ($usedCount < $limit);
+                }
+                
+                if ($hasQuota) {
+                    $discountAmount = ($servicePrice * $discountPercentage) / 100;
+                    $isMembershipDiscountApplied = true;
+                }
             }
         }
 

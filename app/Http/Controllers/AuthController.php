@@ -145,20 +145,43 @@ class AuthController extends Controller
         $user = Auth::user();
         $isMember = (bool)$user->is_member;
         
-        $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
-        $discountAmount = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
-        $usedCount = 0;
+        $tiers = \App\Models\MembershipTier::active()->get();
         
-        if ($isMember) {
-            $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
-            $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
-            
-            $usedCount = \App\Models\Booking::where('user_id', $user->id)
-                ->where('is_membership_discount_applied', true)
-                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-                ->count();
+        $userTier = $user->membershipTier;
+        if ($isMember && !$userTier) {
+            $userTier = \App\Models\MembershipTier::active()->first();
+            if ($userTier) {
+                $user->membership_tier_id = $userTier->id;
+                $user->save();
+            }
         }
         
-        return view('customer.membership', compact('user', 'isMember', 'weeklyLimit', 'discountAmount', 'usedCount'));
+        $usedWd = 0;
+        $usedWe = 0;
+        $limitWd = null;
+        $limitWe = null;
+        $window = 7;
+        
+        if ($isMember && $userTier) {
+            $limitWd = $userTier->limit_wd;
+            $limitWe = $userTier->limit_we;
+            $window = $userTier->window;
+            
+            $startDate = \Carbon\Carbon::now()->subDays($userTier->window);
+            $usedBookings = \App\Models\Booking::where('user_id', $user->id)
+                ->where('is_membership_discount_applied', true)
+                ->where('created_at', '>=', $startDate)
+                ->get();
+            
+            $usedWd = $usedBookings->filter(function($b) {
+                return !\Carbon\Carbon::parse($b->schedule_date)->isWeekend();
+            })->count();
+            
+            $usedWe = $usedBookings->filter(function($b) {
+                return \Carbon\Carbon::parse($b->schedule_date)->isWeekend();
+            })->count();
+        }
+        
+        return view('customer.membership', compact('user', 'isMember', 'tiers', 'userTier', 'usedWd', 'usedWe', 'limitWd', 'limitWe', 'window'));
     }
 }

@@ -343,30 +343,77 @@ class AdminController extends Controller
         return redirect()->back()->with('success', $statusMessage);
     }
 
-    public function membershipSettings()
+    public function membershipIndex()
     {
-        $settings = \App\Models\WebSetting::all()->pluck('value', 'key');
-        
-        $weeklyLimit = (int)($settings['membership_weekly_limit'] ?? 3);
-        $discountAmount = (int)($settings['membership_discount_amount'] ?? 15000);
+        $tiers = \App\Models\MembershipTier::orderBy('price', 'asc')->get();
         
         $customers = User::where('role', 'customer')
             ->orderBy('name', 'asc')
             ->get();
             
-        return view('admin.membership', compact('customers', 'weeklyLimit', 'discountAmount'));
+        return view('admin.membership', compact('tiers', 'customers'));
     }
 
-    public function updateMembershipSettings(\Illuminate\Http\Request $request)
+    public function membershipStore(\Illuminate\Http\Request $request)
     {
         $request->validate([
-            'membership_weekly_limit' => 'required|integer|min:0',
-            'membership_discount_amount' => 'required|integer|min:0',
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer|min:0',
+            'discount_wd' => 'required|integer|min:0|max:100',
+            'discount_we' => 'required|integer|min:0|max:100',
+            'limit_wd' => 'nullable|integer|min:0',
+            'limit_we' => 'nullable|integer|min:0',
+            'window' => 'required|integer|min:1',
+            'duration' => 'required|integer|min:1',
+            'status' => 'required|string|in:active,inactive',
+        ]);
+
+        \App\Models\MembershipTier::create($request->all());
+
+        return redirect()->route('admin.membership')->with('success', 'Paket membership baru berhasil ditambahkan.');
+    }
+
+    public function membershipUpdate(\Illuminate\Http\Request $request, $id)
+    {
+        $tier = \App\Models\MembershipTier::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer|min:0',
+            'discount_wd' => 'required|integer|min:0|max:100',
+            'discount_we' => 'required|integer|min:0|max:100',
+            'limit_wd' => 'nullable|integer|min:0',
+            'limit_we' => 'nullable|integer|min:0',
+            'window' => 'required|integer|min:1',
+            'duration' => 'required|integer|min:1',
+            'status' => 'required|string|in:active,inactive',
+        ]);
+
+        $tier->update($request->all());
+
+        return redirect()->route('admin.membership')->with('success', 'Paket membership berhasil diperbarui.');
+    }
+
+    public function membershipDestroy($id)
+    {
+        $tier = \App\Models\MembershipTier::findOrFail($id);
+        $tier->delete();
+
+        return redirect()->route('admin.membership')->with('success', 'Paket membership berhasil dihapus.');
+    }
+
+    public function changePatientTier(\Illuminate\Http\Request $request, $id)
+    {
+        $user = User::where('role', 'customer')->findOrFail($id);
+        
+        $request->validate([
+            'membership_tier_id' => 'nullable|exists:membership_tiers,id',
         ]);
         
-        \App\Models\WebSetting::set('membership_weekly_limit', $request->membership_weekly_limit);
-        \App\Models\WebSetting::set('membership_discount_amount', $request->membership_discount_amount);
-        
-        return redirect()->route('admin.membership')->with('success', 'Pengaturan membership berhasil disimpan.');
+        $user->membership_tier_id = $request->membership_tier_id;
+        $user->is_member = !empty($request->membership_tier_id);
+        $user->save();
+
+        return redirect()->route('admin.membership')->with('success', 'Tingkat membership pasien berhasil diperbarui.');
     }
 }

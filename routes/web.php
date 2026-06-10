@@ -92,9 +92,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Patient Membership Toggle
     Route::post('/patients/{id}/toggle-membership', [AdminController::class, 'toggleMembership'])->name('patients.toggle_membership');
 
-    // Dedicated Membership Settings Page
-    Route::get('/membership', [AdminController::class, 'membershipSettings'])->name('membership');
-    Route::post('/membership', [AdminController::class, 'updateMembershipSettings'])->name('membership.update');
+    // Dedicated Membership Settings Page & CRUD
+    Route::get('/membership', [AdminController::class, 'membershipIndex'])->name('membership');
+    Route::post('/membership/store', [AdminController::class, 'membershipStore'])->name('membership.store');
+    Route::post('/membership/{id}/update', [AdminController::class, 'membershipUpdate'])->name('membership.update');
+    Route::post('/membership/{id}/delete', [AdminController::class, 'membershipDestroy'])->name('membership.delete');
+    Route::post('/membership/change-patient-tier/{id}', [AdminController::class, 'changePatientTier'])->name('membership.change_patient_tier');
 });
 
 // 6. Therapist-only Routes
