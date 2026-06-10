@@ -355,6 +355,17 @@ class AdminController extends Controller
         return view('admin.membership', compact('tiers', 'customers'));
     }
 
+    public function membershipCreate()
+    {
+        return view('admin.membership_create');
+    }
+
+    public function membershipEdit($id)
+    {
+        $tier = \App\Models\MembershipTier::findOrFail($id);
+        return view('admin.membership_edit', compact('tier'));
+    }
+
     public function membershipStore(\Illuminate\Http\Request $request)
     {
         $request->validate([

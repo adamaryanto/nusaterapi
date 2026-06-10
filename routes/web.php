@@ -94,7 +94,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Dedicated Membership Settings Page & CRUD
     Route::get('/membership', [AdminController::class, 'membershipIndex'])->name('membership');
+    Route::get('/membership/create', [AdminController::class, 'membershipCreate'])->name('membership.create');
     Route::post('/membership/store', [AdminController::class, 'membershipStore'])->name('membership.store');
+    Route::get('/membership/{id}/edit', [AdminController::class, 'membershipEdit'])->name('membership.edit');
     Route::post('/membership/{id}/update', [AdminController::class, 'membershipUpdate'])->name('membership.update');
     Route::post('/membership/{id}/delete', [AdminController::class, 'membershipDestroy'])->name('membership.delete');
     Route::post('/membership/change-patient-tier/{id}', [AdminController::class, 'changePatientTier'])->name('membership.change_patient_tier');

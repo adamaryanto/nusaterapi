@@ -20,10 +20,10 @@
                 <h3 class="font-bold text-slate-800 text-sm">List Tiers</h3>
                 
                 <!-- Add New Tier Button -->
-                <button onclick="openAddModal()" 
-                        class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-sm flex items-center">
+                <a href="{{ route('admin.membership.create') }}" 
+                   class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-sm flex items-center">
                     + Add New Tier
-                </button>
+                </a>
             </div>
 
             <div class="overflow-x-auto">
@@ -66,13 +66,13 @@
                                 <td class="py-4 px-6 text-center">
                                     <div class="flex items-center justify-center space-x-2">
                                         <!-- Edit button (Teal) -->
-                                        <button onclick="openEditModal({{ json_encode($tier) }})" 
-                                                class="p-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition shadow-sm"
-                                                title="Edit Tier">
+                                        <a href="{{ route('admin.membership.edit', $tier->id) }}" 
+                                           class="p-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition shadow-sm"
+                                           title="Edit Tier">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.83 20.082a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
                                             </svg>
-                                        </button>
+                                        </a>
                                         
                                         <!-- Delete button (Red) -->
                                         <form action="{{ route('admin.membership.delete', $tier->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus paket membership ini?')">
@@ -99,207 +99,4 @@
         </div>
 
     </div>
-
-    <!-- ============================================ -->
-    <!-- MODAL ADD NEW TIER -->
-    <!-- ============================================ -->
-    <div id="addTierModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl w-full max-w-xl p-8 shadow-xl border border-gray-150 transform transition duration-300 scale-95 mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-6">
-                <h4 class="font-bold text-slate-900 text-lg">Add New Membership Tier</h4>
-                <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-semibold">&times;</button>
-            </div>
-            
-            <form action="{{ route('admin.membership.store') }}" method="POST" class="space-y-4">
-                @csrf
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">NAME</label>
-                        <input type="text" name="name" required placeholder="e.g. Silver Member" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">PRICE (Rp)</label>
-                        <input type="number" name="price" required placeholder="e.g. 250000" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">STATUS</label>
-                        <select name="status" required 
-                                class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400 bg-white">
-                            <option value="active">ACTIVE</option>
-                            <option value="inactive">INACTIVE</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">DISC WEEKDAY (%)</label>
-                        <input type="number" name="discount_wd" required min="0" max="100" placeholder="e.g. 5" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">DISC WEEKEND (%)</label>
-                        <input type="number" name="discount_we" required min="0" max="100" placeholder="e.g. 5" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">LIMIT WEEKDAY</label>
-                        <input type="number" name="limit_wd" placeholder="Unlimited jika kosong" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">LIMIT WEEKEND</label>
-                        <input type="number" name="limit_we" placeholder="Unlimited jika kosong" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">LIMIT WINDOW (Days)</label>
-                        <input type="number" name="window" required value="7" placeholder="e.g. 7" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">DURATION (Days)</label>
-                        <input type="number" name="duration" required value="30" placeholder="e.g. 30" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                </div>
-                
-                <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-6">
-                    <button type="button" onclick="closeAddModal()" 
-                            class="px-5 py-2 border border-gray-350 text-sm font-semibold rounded-lg hover:bg-gray-50 transition text-slate-700">Cancel</button>
-                    <button type="submit" 
-                            class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg shadow-sm transition">Add Tier</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- MODAL EDIT TIER -->
-    <!-- ============================================ -->
-    <div id="editTierModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl w-full max-w-xl p-8 shadow-xl border border-gray-150 transform transition duration-300 scale-95 mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-6">
-                <h4 class="font-bold text-slate-900 text-lg">Edit Membership Tier</h4>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-semibold">&times;</button>
-            </div>
-            
-            <form id="edit-tier-form" method="POST" class="space-y-4">
-                @csrf
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">NAME</label>
-                        <input type="text" name="name" id="edit-name" required 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">PRICE (Rp)</label>
-                        <input type="number" name="price" id="edit-price" required 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">STATUS</label>
-                        <select name="status" id="edit-status" required 
-                                class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400 bg-white">
-                            <option value="active">ACTIVE</option>
-                            <option value="inactive">INACTIVE</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">DISC WEEKDAY (%)</label>
-                        <input type="number" name="discount_wd" id="edit-discount-wd" required min="0" max="100" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">DISC WEEKEND (%)</label>
-                        <input type="number" name="discount_we" id="edit-discount-we" required min="0" max="100" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">LIMIT WEEKDAY</label>
-                        <input type="number" name="limit_wd" id="edit-limit-wd" placeholder="Unlimited jika kosong" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">LIMIT WEEKEND</label>
-                        <input type="number" name="limit_we" id="edit-limit-we" placeholder="Unlimited jika kosong" 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">LIMIT WINDOW (Days)</label>
-                        <input type="number" name="window" id="edit-window" required 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">DURATION (Days)</label>
-                        <input type="number" name="duration" id="edit-duration" required 
-                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400">
-                    </div>
-                </div>
-                
-                <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-6">
-                    <button type="button" onclick="closeEditModal()" 
-                            class="px-5 py-2 border border-gray-350 text-sm font-semibold rounded-lg hover:bg-gray-50 transition text-slate-700">Cancel</button>
-                    <button type="submit" 
-                            class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg shadow-sm transition">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-@endsection
-
-@section('scripts')
-    <script>
-        // Modal toggling functions
-        function openAddModal() {
-            const modal = document.getElementById('addTierModal');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.firstElementChild.classList.remove('scale-95');
-                modal.firstElementChild.classList.add('scale-100');
-            }, 10);
-        }
-
-        // Close add modal
-        function closeAddModal() {
-            const modal = document.getElementById('addTierModal');
-            modal.firstElementChild.classList.remove('scale-100');
-            modal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 150);
-        }
-
-        // Open edit modal
-        function openEditModal(tier) {
-            const modal = document.getElementById('editTierModal');
-            
-            document.getElementById('edit-name').value = tier.name;
-            document.getElementById('edit-price').value = tier.price;
-            document.getElementById('edit-status').value = tier.status;
-            document.getElementById('edit-discount-wd').value = tier.discount_wd;
-            document.getElementById('edit-discount-we').value = tier.discount_we;
-            document.getElementById('edit-limit-wd').value = tier.limit_wd !== null ? tier.limit_wd : '';
-            document.getElementById('edit-limit-we').value = tier.limit_we !== null ? tier.limit_we : '';
-            document.getElementById('edit-window').value = tier.window;
-            document.getElementById('edit-duration').value = tier.duration;
-            
-            document.getElementById('edit-tier-form').action = `/admin/membership/${tier.id}/update`;
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.firstElementChild.classList.remove('scale-95');
-                modal.firstElementChild.classList.add('scale-100');
-            }, 10);
-        }
-
-        // Close edit modal
-        function closeEditModal() {
-            const modal = document.getElementById('editTierModal');
-            modal.firstElementChild.classList.remove('scale-100');
-            modal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 150);
-        }
-    </script>
 @endsection
