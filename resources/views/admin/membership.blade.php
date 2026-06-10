@@ -98,76 +98,6 @@
             </div>
         </div>
 
-        <!-- 2. Patients Membership Tier Assignments -->
-        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-150 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                <div>
-                    <h3 class="font-bold text-slate-800 text-sm">Status Keanggotaan Pasien</h3>
-                    <p class="text-xs text-gray-500 mt-1">Kelola dan pilih tingkat membership untuk setiap pasien terdaftar.</p>
-                </div>
-                <div class="relative">
-                    <input type="text" id="patient-search" onkeyup="filterPatients()" placeholder="Cari nama pasien..." 
-                           class="border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400 w-48 transition">
-                </div>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-sm text-slate-700" id="patients-table">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-gray-150 text-slate-500 font-semibold text-xs uppercase tracking-wider">
-                            <th class="py-3.5 px-6">Nama Pasien</th>
-                            <th class="py-3.5 px-6">Email</th>
-                            <th class="py-3.5 px-6">No. Telepon</th>
-                            <th class="py-3.5 px-6 text-center">Status Member</th>
-                            <th class="py-3.5 px-6 text-center">Pilih Paket Membership</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse($customers as $customer)
-                            <tr class="hover:bg-gray-50/50 transition duration-150 patient-row">
-                                <td class="py-4 px-6 font-semibold text-slate-800 patient-name">{{ $customer->name }}</td>
-                                <td class="py-4 px-6 text-gray-500">{{ $customer->email }}</td>
-                                <td class="py-4 px-6">{{ $customer->phone ?: '—' }}</td>
-                                <td class="py-4 px-6 text-center">
-                                    @if($customer->is_member && $customer->membershipTier)
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                            {{ $customer->membershipTier->name }}
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-500 border border-gray-200">
-                                            Bukan Member
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="py-4 px-6 text-center">
-                                    <form action="{{ route('admin.membership.change_patient_tier', $customer->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        <select name="membership_tier_id" onchange="this.form.submit()" 
-                                                class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 bg-white focus:outline-none focus:ring-1 focus:ring-slate-400">
-                                            <option value="">-- Bukan Member --</option>
-                                            @foreach($tiers as $t)
-                                                @if($t->status === 'active')
-                                                    <option value="{{ $t->id }}" {{ ($customer->is_member && $customer->membership_tier_id == $t->id) ? 'selected' : '' }}>
-                                                        {{ $t->name }} (Rp {{ number_format($t->price, 0, ',', '.') }})
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="py-8 text-center text-gray-400">
-                                    Belum ada data pasien terdaftar.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
     </div>
 
     <!-- ============================================ -->
@@ -329,6 +259,7 @@
             }, 10);
         }
 
+        // Close add modal
         function closeAddModal() {
             const modal = document.getElementById('addTierModal');
             modal.firstElementChild.classList.remove('scale-100');
@@ -338,10 +269,10 @@
             }, 150);
         }
 
+        // Open edit modal
         function openEditModal(tier) {
             const modal = document.getElementById('editTierModal');
             
-            // Set values in edit form
             document.getElementById('edit-name').value = tier.name;
             document.getElementById('edit-price').value = tier.price;
             document.getElementById('edit-status').value = tier.status;
@@ -352,7 +283,6 @@
             document.getElementById('edit-window').value = tier.window;
             document.getElementById('edit-duration').value = tier.duration;
             
-            // Set dynamic form action URL
             document.getElementById('edit-tier-form').action = `/admin/membership/${tier.id}/update`;
             
             modal.classList.remove('hidden');
@@ -362,6 +292,7 @@
             }, 10);
         }
 
+        // Close edit modal
         function closeEditModal() {
             const modal = document.getElementById('editTierModal');
             modal.firstElementChild.classList.remove('scale-100');
@@ -369,25 +300,6 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
             }, 150);
-        }
-
-        // Live filtering for patients list
-        function filterPatients() {
-            const input = document.getElementById('patient-search');
-            const filter = input.value.toLowerCase();
-            const rows = document.getElementsByClassName('patient-row');
-
-            for (let i = 0; i < rows.length; i++) {
-                const nameCell = rows[i].getElementsByClassName('patient-name')[0];
-                if (nameCell) {
-                    const txtValue = nameCell.textContent || nameCell.innerText;
-                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                        rows[i].style.display = "";
-                    } else {
-                        rows[i].style.display = "none";
-                    }
-                }
-            }
         }
     </script>
 @endsection
