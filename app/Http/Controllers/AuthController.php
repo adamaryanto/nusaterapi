@@ -145,14 +145,11 @@ class AuthController extends Controller
         $user = Auth::user();
         $isMember = (bool)$user->is_member;
         
-        $weeklyLimit = 0;
-        $discountAmount = 0;
+        $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
+        $discountAmount = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
         $usedCount = 0;
         
         if ($isMember) {
-            $weeklyLimit = (int)\App\Models\WebSetting::get('membership_weekly_limit', '3');
-            $discountAmount = (int)\App\Models\WebSetting::get('membership_discount_amount', '15000');
-            
             $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
             $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
             
