@@ -13,15 +13,8 @@
     @yield('styles')
     <!-- Navbar -->
     <nav class="flex justify-between items-center py-4 px-8 md:px-16 bg-white border-b sticky top-0 z-50">
-        @if(Route::is('customer.booking'))
-            <span class="font-bold text-lg text-slate-800">Buat Pesanan &gt; Form Booking</span>
-        @elseif(Route::is('customer.profile'))
-            <span class="font-bold text-lg text-slate-800">Data Diri &gt; Edit Profil</span>
-        @else
-            <a href="{{ route('landing') }}" class="font-bold text-xl text-slate-900 cursor-pointer">Nusa Terapi Center</a>
-        @endif
+        <a href="{{ route('landing') }}" class="font-bold text-xl text-slate-900 cursor-pointer">Nusa Terapi Center</a>
         
-        @if(!Route::is('customer.booking') && !Route::is('customer.profile'))
         <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600 items-center">
             <a id="nav-link-beranda" href="{{ route('landing') }}#beranda" class="hover:text-slate-900 transition py-1 text-gray-600">Beranda</a>
             <a id="nav-link-layanan" href="{{ route('landing') }}#layanan" class="hover:text-slate-900 transition py-1 text-gray-600">Layanan</a>
@@ -34,7 +27,6 @@
             <a id="nav-link-testimoni" href="{{ route('landing') }}#testimoni" class="hover:text-slate-900 transition py-1 text-gray-600">Testimoni</a>
             <a id="nav-link-faq" href="{{ route('landing') }}#faq" class="hover:text-slate-900 transition py-1 text-gray-600">FAQ</a>
         </div>
-        @endif
 
         <div id="auth-panel" class="flex items-center space-x-3">
             @guest
