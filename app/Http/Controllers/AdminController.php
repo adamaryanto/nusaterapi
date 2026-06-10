@@ -117,6 +117,7 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
             'phone' => 'nullable|string|max:20',
+            'gender' => 'required|string|in:Laki-laki,Perempuan',
             'address' => 'nullable|string',
             'specialty' => 'required|string|max:255',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -136,6 +137,7 @@ class AdminController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'phone' => $request->phone,
+                'gender' => $request->gender,
                 'address' => $request->address,
                 'avatar_path' => $avatarPath,
                 'role' => 'therapist',
@@ -144,6 +146,7 @@ class AdminController extends Controller
             Therapist::create([
                 'user_id' => $user->id,
                 'name' => $request->name,
+                'gender' => $request->gender,
                 'specialty' => $request->specialty,
                 'avatar_path' => $avatarPath,
                 'status' => 'Active',
@@ -170,6 +173,7 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email' . ($userId ? ',' . $userId : ''),
             'password' => ($userId ? 'nullable' : 'required') . '|string|min:8',
             'phone' => 'nullable|string|max:20',
+            'gender' => 'required|string|in:Laki-laki,Perempuan',
             'address' => 'nullable|string',
             'specialty' => 'required|string|max:255',
             'status' => 'required|string|in:Active,Inactive',
@@ -195,6 +199,7 @@ class AdminController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
+                'gender' => $request->gender,
                 'address' => $request->address,
                 'avatar_path' => $avatarPath,
             ];
@@ -217,6 +222,7 @@ class AdminController extends Controller
             $therapist->update([
                 'user_id' => $therapist->user_id,
                 'name' => $request->name,
+                'gender' => $request->gender,
                 'specialty' => $request->specialty,
                 'status' => $request->status,
                 'avatar_path' => $avatarPath,

@@ -12,7 +12,12 @@ class BookingController extends Controller
 {
     public function bookingForm(Request $request)
     {
-        $therapists = Therapist::where('status', 'Active')->get();
+        $userGender = Auth::user()->gender;
+        $query = Therapist::where('status', 'Active');
+        if ($userGender) {
+            $query->where('gender', $userGender);
+        }
+        $therapists = $query->get();
         $services   = Service::active()->get();
         return view('customer.booking', compact('therapists', 'services'));
     }
@@ -39,8 +44,17 @@ class BookingController extends Controller
             'price' => $request->location_type === 'home' ? $serviceModel->price_home : $serviceModel->price_clinic,
         ];
 
-        // Find therapist
-        $therapist = Therapist::where('name', $request->therapist_name)->first();
+        // Find therapist and ensure matching gender
+        $userGender = Auth::user()->gender;
+        $therapistQuery = Therapist::where('name', $request->therapist_name)->where('status', 'Active');
+        if ($userGender) {
+            $therapistQuery->where('gender', $userGender);
+        }
+        $therapist = $therapistQuery->first();
+
+        if (!$therapist) {
+            return back()->withErrors(['therapist_name' => 'Terapis yang dipilih tidak tersedia atau tidak sesuai dengan jenis kelamin Anda.'])->withInput();
+        }
 
         // Calculate transportation fee
         $transportFee = $request->location_type === 'home' ? 20000 : 0;
@@ -72,6 +86,10 @@ class BookingController extends Controller
             }
         }
 
+        $paymentStatus = $request->input('payment_status', 'paid');
+        $status = $paymentStatus === 'pending' ? 'Menunggu Pembayaran' : 'Akan Datang';
+        $payStatus = $paymentStatus === 'pending' ? 'Belum Bayar' : 'Lunas';
+
         // Create booking in database
         Booking::create([
             'id'            => $orderId,
@@ -85,18 +103,21 @@ class BookingController extends Controller
             'service_price' => $servicePrice,
             'transport_price' => $transportFee,
             'total_payment' => $totalPayment,
-            'status'        => 'Akan Datang',
-            'pay_status'    => 'Lunas',
+            'status'        => $status,
+            'pay_status'    => $payStatus,
         ]);
 
-        return redirect()->route('customer.history')->with('success', 'Pesanan Anda berhasil dibuat!');
+        $message = $paymentStatus === 'pending' 
+            ? 'Pesanan Anda berhasil dibuat dan menunggu pembayaran!' 
+            : 'Pesanan Anda berhasil dibuat!';
+
+        return redirect()->route('customer.history')->with('success', $message);
     }
 
     public function history()
     {
         $bookings = Booking::where('user_id', Auth::id())
-            ->orderBy('schedule_date', 'desc')
-            ->orderBy('schedule_time', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('customer.history', compact('bookings'));
@@ -175,5 +196,28 @@ class BookingController extends Controller
         }
 
         return redirect()->route('customer.history')->with('success', 'Terima kasih atas ulasan Anda!');
+    }
+
+    public function payBooking($id)
+    {
+        $booking = Booking::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->firstOrFail();
+
+        if ($booking->status === 'Menunggu Pembayaran') {
+            $booking->update([
+                'status' => 'Akan Datang',
+                'pay_status' => 'Lunas'
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran berhasil dikonfirmasi.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Pesanan ini tidak dapat dibayar.'
+        ], 400);
     }
 }

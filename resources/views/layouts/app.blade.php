@@ -23,16 +23,16 @@
         
         @if(!Route::is('customer.booking') && !Route::is('customer.profile'))
         <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600 items-center">
-            <a href="{{ route('landing') }}" class="hover:text-slate-900 transition py-1 {{ Route::is('landing') ? 'text-slate-900 font-bold border-b-2 border-slate-900' : '' }}">Beranda</a>
-            <a href="{{ route('landing') }}#layanan" class="hover:text-slate-900 transition">Layanan</a>
+            <a id="nav-link-beranda" href="{{ route('landing') }}#beranda" class="hover:text-slate-900 transition py-1 text-gray-600">Beranda</a>
+            <a id="nav-link-layanan" href="{{ route('landing') }}#layanan" class="hover:text-slate-900 transition py-1 text-gray-600">Layanan</a>
             @auth
                 @if(auth()->user()->role === 'customer')
                     <a id="nav-history" href="{{ route('customer.history') }}" class="hover:text-slate-900 transition py-1 {{ Route::is('customer.history') ? 'text-slate-900 font-bold border-b-2 border-slate-900' : '' }}">Riwayat Pesanan</a>
                 @endif
             @endauth
-            <a href="{{ route('landing') }}#tentang-kami" class="hover:text-slate-900 transition">Tentang Kami</a>
-            <a href="{{ route('landing') }}#testimoni" class="hover:text-slate-900 transition">Testimoni</a>
-            <a href="{{ route('landing') }}#faq" class="hover:text-slate-900 transition">FAQ</a>
+            <a id="nav-link-tentang-kami" href="{{ route('landing') }}#tentang-kami" class="hover:text-slate-900 transition py-1 text-gray-600">Tentang Kami</a>
+            <a id="nav-link-testimoni" href="{{ route('landing') }}#testimoni" class="hover:text-slate-900 transition py-1 text-gray-600">Testimoni</a>
+            <a id="nav-link-faq" href="{{ route('landing') }}#faq" class="hover:text-slate-900 transition py-1 text-gray-600">FAQ</a>
         </div>
         @endif
 

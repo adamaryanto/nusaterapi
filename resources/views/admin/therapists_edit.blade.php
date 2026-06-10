@@ -80,6 +80,20 @@
                             @enderror
                         </div>
 
+                        <!-- Jenis Kelamin -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Jenis Kelamin *</label>
+                            <select name="gender" required
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm font-medium">
+                                <option value="" disabled {{ is_null($therapist->user?->gender) ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                                <option value="Laki-laki" {{ old('gender', $therapist->user?->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="Perempuan" {{ old('gender', $therapist->user?->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            </select>
+                            @error('gender')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Spesialisasi -->
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Spesialisasi *</label>

@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="bg-[#f0f7f4] flex flex-col-reverse md:flex-row items-center py-16 px-8 md:px-24">
+    <section id="beranda" class="bg-[#f0f7f4] flex flex-col-reverse md:flex-row items-center py-16 px-8 md:px-24">
         <div class="md:w-1/2 pr-0 md:pr-12 mt-8 md:mt-0">
             <h1 class="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-6">
                 {{ $settings->get('banner_headline', 'Kembalikan Kebugaran Tubuh Tanpa Perlu Keluar Rumah') }}
@@ -175,5 +175,75 @@
             content.classList.toggle('hidden');
             icon.innerText = content.classList.contains('hidden') ? '[+]' : '[-]';
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = {
+                'beranda': document.getElementById('nav-link-beranda'),
+                'layanan': document.getElementById('nav-link-layanan'),
+                'tentang-kami': document.getElementById('nav-link-tentang-kami'),
+                'testimoni': document.getElementById('nav-link-testimoni'),
+                'faq': document.getElementById('nav-link-faq')
+            };
+
+            const activeClasses = ['text-slate-900', 'font-bold', 'border-b-2', 'border-slate-900'];
+            const inactiveClasses = ['text-gray-600'];
+
+            function activateLink(id) {
+                Object.entries(navLinks).forEach(([key, link]) => {
+                    if (link) {
+                        if (key === id) {
+                            link.classList.remove(...inactiveClasses);
+                            link.classList.add(...activeClasses);
+                        } else {
+                            link.classList.remove(...activeClasses);
+                            link.classList.add(...inactiveClasses);
+                        }
+                    }
+                });
+            }
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-30% 0px -30% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                // If scroll is near top, force beranda active
+                if (window.scrollY < 100) {
+                    activateLink('beranda');
+                    return;
+                }
+
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        activateLink(id);
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                if (navLinks[section.id]) {
+                    observer.observe(section);
+                }
+            });
+
+            // Fallback for scrolling back to the very top
+            window.addEventListener('scroll', function() {
+                if (window.scrollY < 100) {
+                    activateLink('beranda');
+                }
+            });
+
+            // Initial check based on current hash or scroll position
+            const currentHash = window.location.hash.substring(1);
+            if (currentHash && navLinks[currentHash]) {
+                activateLink(currentHash);
+            } else if (window.scrollY < 100) {
+                activateLink('beranda');
+            }
+        });
     </script>
 @endsection

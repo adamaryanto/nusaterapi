@@ -228,7 +228,6 @@
         function handleBooking() {
             const isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
             if (!isLoggedIn) {
-                alert("Silakan login terlebih dahulu untuk melakukan pemesanan!");
                 window.location.href = "{{ route('login') }}";
                 return;
             }

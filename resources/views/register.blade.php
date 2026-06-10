@@ -59,6 +59,24 @@
             </div>
 
             <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Jenis Kelamin</label>
+                <div class="relative">
+                    <select name="gender" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm text-slate-700 appearance-none bg-white">
+                        <option value="" selected disabled>Pilih Jenis Kelamin</option>
+                        <option value="Laki-laki" {{ old('gender') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 text-xs">
+                        <span>▼</span>
+                    </div>
+                </div>
+                @error('gender')
+                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                @enderror
+            </div>
+
+
+            <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
                 <input type="password" name="password" placeholder="••••••••" required minlength="8"
                     class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 transition text-sm text-slate-700">
