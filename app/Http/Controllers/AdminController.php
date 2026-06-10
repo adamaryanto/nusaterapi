@@ -39,7 +39,8 @@ class AdminController extends Controller
 
     public function patients()
     {
-        $patients = User::where('role', 'customer')
+        $patients = User::with('membershipTier')
+            ->where('role', 'customer')
             ->orderBy('created_at', 'desc')
             ->get();
 

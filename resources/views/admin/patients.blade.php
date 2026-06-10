@@ -46,8 +46,10 @@
                             @endif
                         </td>
                         <td class="py-4 px-4 text-center">
-                            @if($patient->is_member)
-                                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200">Member</span>
+                            @if($patient->is_member && $patient->membershipTier)
+                                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200">
+                                    {{ $patient->membershipTier->name }}
+                                </span>
                             @else
                                 <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full border border-gray-200">Bukan Member</span>
                             @endif
