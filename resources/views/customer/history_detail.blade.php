@@ -12,7 +12,7 @@
             $statusText = "Dikonfirmasi";
         } elseif ($booking->status === "Dalam Perjalanan") {
             $badgeClass = "bg-blue-50 text-blue-700 border-blue-200";
-            $statusText = "Terapis OTW";
+            $statusText = "Terapis Dalam Perjalanan";
         } elseif ($booking->status === "Sampai Tujuan") {
             $badgeClass = "bg-indigo-50 text-indigo-700 border-indigo-200";
             $statusText = "Terapis Tiba";
