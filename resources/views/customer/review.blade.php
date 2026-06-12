@@ -121,7 +121,12 @@
         const ratingVal = document.getElementById('rating-value').value;
         if (parseInt(ratingVal) === 0) {
             e.preventDefault();
-            alert('Silakan pilih rating bintang terlebih dahulu.');
+            Swal.fire({
+                title: 'Beri Bintang',
+                text: 'Silakan pilih rating bintang terlebih dahulu.',
+                icon: 'warning',
+                confirmButtonColor: '#0f172a'
+            });
         }
     });
 </script>

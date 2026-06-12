@@ -157,7 +157,12 @@
             const file = event.target.files[0];
             if (file) {
                 if (file.size > 2 * 1024 * 1024) {
-                    alert("Ukuran file terlalu besar! Maksimal ukuran adalah 2MB.");
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: "Ukuran file terlalu besar! Maksimal ukuran adalah 2MB.",
+                        icon: 'error',
+                        confirmButtonColor: '#0f172a'
+                    });
                     return;
                 }
 

@@ -34,6 +34,7 @@
                             <th class="py-4 px-6">PRICE</th>
                             <th class="py-4 px-6 text-center">DISC (WD/WE)</th>
                             <th class="py-4 px-6 text-center">LIMIT (WD/WE)</th>
+                            <th class="py-4 px-6 text-center">RESCHEDULE</th>
                             <th class="py-4 px-6 text-center">WINDOW</th>
                             <th class="py-4 px-6 text-center">DURATION</th>
                             <th class="py-4 px-6 text-center">STATUS</th>
@@ -49,6 +50,9 @@
                                 <td class="py-4 px-6 text-center">
                                     {{ $tier->limit_wd === null ? '∞' : $tier->limit_wd . 'x' }} / 
                                     {{ $tier->limit_we === null ? '∞' : $tier->limit_we . 'x' }}
+                                </td>
+                                <td class="py-4 px-6 text-center">
+                                    {{ $tier->free_reschedule_limit }}x / Rp {{ number_format($tier->reschedule_fee, 0, ',', '.') }}
                                 </td>
                                 <td class="py-4 px-6 text-center">{{ $tier->window }} Days</td>
                                 <td class="py-4 px-6 text-center">{{ $tier->duration }} Days</td>
@@ -88,7 +92,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="py-8 text-center text-gray-400">
+                                <td colspan="9" class="py-8 text-center text-gray-400">
                                     Belum ada data paket membership.
                                 </td>
                             </tr>

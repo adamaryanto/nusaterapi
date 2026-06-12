@@ -122,6 +122,14 @@
                                 <span>-Rp {{ number_format($booking->discount_amount, 0, ',', '.') }}</span>
                             </div>
                             @endif
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-medium">Biaya Admin</span>
+                                <span class="text-slate-800 font-medium">Rp {{ number_format($booking->admin_fee, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-medium">PPN</span>
+                                <span class="text-slate-800 font-medium">Rp {{ number_format($booking->tax_amount, 0, ',', '.') }}</span>
+                            </div>
                             
                             <hr class="border-gray-100 my-2">
                             

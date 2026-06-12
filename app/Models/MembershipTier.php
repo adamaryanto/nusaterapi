@@ -15,6 +15,8 @@ class MembershipTier extends Model
         'limit_we',
         'window',
         'duration',
+        'free_reschedule_limit',
+        'reschedule_fee',
         'status',
     ];
 

@@ -57,8 +57,19 @@
                     <span class="text-slate-700 font-semibold text-sm" id="detail-order-date">{{ $booking->created_at->translatedFormat('d F Y, H:i') }} WIB</span>
                 </div>
             </div>
-            <div>
+            <div class="flex flex-col items-start md:items-end gap-1">
                 <span class="px-3.5 py-1 text-xs font-bold rounded-full border {{ $badgeClass }}" id="detail-status-badge">{{ $statusText }}</span>
+                @if($booking->status === 'Menunggu Pembayaran')
+                    @php
+                        $expiryTime = $booking->created_at->addMinutes(10);
+                        $remainingSeconds = now()->diffInSeconds($expiryTime, false);
+                    @endphp
+                    @if($remainingSeconds > 0)
+                        <span class="text-rose-600 font-bold flex items-center space-x-1 countdown-timer bg-rose-50 px-2 py-0.5 rounded border border-rose-100 text-[10px] tracking-wide mt-1" data-seconds="{{ $remainingSeconds }}">
+                            <span>⏳</span> <span class="timer-display">--:--</span>
+                        </span>
+                    @endif
+                @endif
             </div>
         </div>
 
@@ -128,6 +139,16 @@
                         <span>-Rp {{ number_format($booking->discount_amount, 0, ',', '.') }}</span>
                     </div>
                 @endif
+
+                <div class="flex justify-between text-gray-400 font-medium">
+                    <span>Biaya Admin</span>
+                    <span class="text-slate-800" id="info-admin-fee">Rp {{ number_format($booking->admin_fee, 0, ',', '.') }}</span>
+                </div>
+
+                <div class="flex justify-between text-gray-400 font-medium">
+                    <span>PPN</span>
+                    <span class="text-slate-800" id="info-tax-amount">Rp {{ number_format($booking->tax_amount, 0, ',', '.') }}</span>
+                </div>
                 
                 <hr class="border-gray-100 my-2">
                 
@@ -143,6 +164,16 @@
             <button onclick="contactTherapist()" class="px-6 py-3.5 bg-[#0bb583] hover:bg-[#0aa376] text-white rounded-xl text-xs md:text-sm font-bold transition shadow-sm hover:shadow focus:outline-none">
                 Hubungi Terapis
             </button>
+            @if($booking->status === 'Menunggu Pembayaran')
+                <button onclick="openPaymentModalForBooking(this, '{{ $booking->id }}')" class="px-6 py-3.5 bg-[#0f172a] hover:bg-slate-800 text-white rounded-xl text-xs md:text-sm font-bold transition shadow-sm hover:shadow focus:outline-none">
+                    Bayar Sekarang
+                </button>
+            @endif
+            @if($booking->status === 'Akan Datang')
+                <a href="{{ route('customer.booking.reschedule', $booking->id) }}" class="px-6 py-3.5 bg-[#0f172a] hover:bg-slate-800 text-white rounded-xl text-xs md:text-sm font-bold transition shadow-sm hover:shadow focus:outline-none inline-block">
+                    Jadwal Ulang
+                </a>
+            @endif
             @if($booking->status === 'Akan Datang' || $booking->status === 'Menunggu Pembayaran')
                 <button onclick="cancelOrder()" id="cancel-order-btn" class="px-6 py-3.5 bg-white border border-rose-500 text-rose-500 hover:bg-rose-50 rounded-xl text-xs md:text-sm font-bold transition shadow-sm focus:outline-none">
                     Batalkan Pesanan
@@ -154,35 +185,192 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
     <script>
         function contactTherapist() {
-            alert("Menghubungi terapis {{ $booking->therapist ? $booking->therapist->name : 'Nusa Terapi' }} melalui WhatsApp...");
+            Swal.fire({
+                title: 'Hubungi Terapis',
+                text: "Menghubungi terapis {{ $booking->therapist ? $booking->therapist->name : 'Nusa Terapi' }} melalui WhatsApp...",
+                icon: 'info',
+                confirmButtonColor: '#0bb583'
+            });
         }
 
         function cancelOrder() {
-            if (confirm("Apakah Anda yakin ingin membatalkan pesanan ini?")) {
-                fetch("{{ route('customer.history.cancel', $booking->id) }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        window.location.reload();
-                    } else {
-                        alert(data.message || "Gagal membatalkan pesanan.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("Terjadi kesalahan saat membatalkan pesanan.");
-                });
-            }
+            Swal.fire({
+                title: 'Batalkan Pesanan',
+                text: "Apakah Anda yakin ingin membatalkan pesanan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#0f172a',
+                confirmButtonText: 'Ya, batalkan!',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch("{{ route('customer.history.cancel', $booking->id) }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Berhasil',
+                                text: data.message,
+                                icon: 'success',
+                                confirmButtonColor: '#0f172a'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Gagal',
+                                text: data.message || "Gagal membatalkan pesanan.",
+                                icon: 'error',
+                                confirmButtonColor: '#0f172a'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: "Terjadi kesalahan saat membatalkan pesanan.",
+                            icon: 'error',
+                            confirmButtonColor: '#0f172a'
+                        });
+                    });
+                }
+            });
         }
+
+        // Midtrans Integration
+        function openPaymentModalForBooking(payButton, orderId) {
+            const originalText = payButton.innerText;
+            payButton.disabled = true;
+            payButton.innerText = "Loading...";
+
+            // Request snap token from backend
+            fetch(`/riwayat-pesanan/detail/${orderId}/snap-token`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                payButton.disabled = false;
+                payButton.innerText = originalText;
+
+                if (data.success && data.snap_token) {
+                    window.snap.pay(data.snap_token, {
+                        onSuccess: function(result) {
+                            fetch(`/riwayat-pesanan/detail/${orderId}/pay`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Swal.fire({
+                                    title: 'Pembayaran Berhasil!',
+                                    text: 'Terima kasih atas pembayaran Anda.',
+                                    icon: 'success',
+                                    confirmButtonColor: '#0f172a'
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            })
+                            .catch(error => {
+                                console.error("Error confirming payment:", error);
+                                window.location.reload();
+                            });
+                        },
+                        onPending: function(result) {
+                            Swal.fire({
+                                title: 'Pembayaran Tertunda',
+                                text: 'Silakan selesaikan pembayaran Anda.',
+                                icon: 'info',
+                                confirmButtonColor: '#0f172a'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        onError: function(result) {
+                            Swal.fire({
+                                title: 'Pembayaran Gagal',
+                                text: 'Silakan coba lagi.',
+                                icon: 'error',
+                                confirmButtonColor: '#0f172a'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        onClose: function() {
+                            // User closed the popup
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.message || 'Gagal mendapatkan token pembayaran.',
+                        icon: 'warning',
+                        confirmButtonColor: '#0f172a'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Midtrans Snap Error:", error);
+                payButton.disabled = false;
+                payButton.innerText = originalText;
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Terjadi kesalahan saat menghubungkan ke Midtrans.',
+                    icon: 'error',
+                    confirmButtonColor: '#0f172a'
+                });
+            });
+        }
+
+        // Live Countdown Timer logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const timers = document.querySelectorAll('.countdown-timer');
+            timers.forEach(timer => {
+                let remainingSeconds = parseInt(timer.getAttribute('data-seconds'), 10);
+                const display = timer.querySelector('.timer-display');
+                
+                function updateTimer() {
+                    if (remainingSeconds <= 0) {
+                        display.innerText = "Waktu Habis";
+                        timer.classList.remove('text-rose-600', 'bg-rose-50', 'border-rose-100');
+                        timer.classList.add('text-gray-400', 'bg-gray-50', 'border-gray-200');
+                        // Reload the page to trigger backend status auto-expiry update
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                        return;
+                    }
+                    
+                    const minutes = Math.floor(remainingSeconds / 60);
+                    const seconds = remainingSeconds % 60;
+                    
+                    display.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    remainingSeconds--;
+                    setTimeout(updateTimer, 1000);
+                }
+                
+                updateTimer();
+            });
+        });
     </script>
 @endsection

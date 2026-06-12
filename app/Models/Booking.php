@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'service_name',
     'schedule_date',
     'schedule_time',
+    'duration',
     'location_type',
     'address',
     'service_price',
@@ -22,7 +23,11 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'rating',
     'review',
     'discount_amount',
-    'is_membership_discount_applied'
+    'is_membership_discount_applied',
+    'reschedule_count',
+    'reschedule_fee_charged',
+    'admin_fee',
+    'tax_amount'
 ])]
 class Booking extends Model
 {

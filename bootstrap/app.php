@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'therapist' => \App\Http\Middleware\TherapistMiddleware::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            '/api/midtrans/callback',
+        ]);
+
         $middleware->redirectTo(
             guests: '/login',
             users: function () {

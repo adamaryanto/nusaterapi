@@ -9,6 +9,8 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#f0f7f4] min-h-screen flex items-center justify-center p-4 py-10">
 
@@ -100,5 +102,35 @@
             Sudah punya akun? <a href="{{ route('login') }}" class="font-bold hover:underline">Masuk di sini</a>
         </p>
     </div>
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonColor: '#0f172a'
+            });
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonColor: '#0f172a'
+            });
+        </script>
+    @endif
+    @if($errors->any())
+        <script>
+            Swal.fire({
+                title: 'Gagal!',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+                icon: 'error',
+                confirmButtonColor: '#0f172a'
+            });
+        </script>
+    @endif
 </body>
 </html>

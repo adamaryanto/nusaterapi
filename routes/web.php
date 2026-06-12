@@ -38,19 +38,28 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth', 'customer'])->group(function () {
     Route::get('/booking', [BookingController::class, 'bookingForm'])->name('customer.booking');
     Route::post('/booking', [BookingController::class, 'storeBooking']);
+    Route::get('/booking/check-availability', [BookingController::class, 'checkAvailability'])->name('customer.booking.check-availability');
 
     Route::get('/riwayat-pesanan', [BookingController::class, 'history'])->name('customer.history');
     Route::get('/riwayat-pesanan/detail/{id}', [BookingController::class, 'historyDetail'])->name('customer.history.detail');
     Route::post('/riwayat-pesanan/detail/{id}/cancel', [BookingController::class, 'cancelBooking'])->name('customer.history.cancel');
     Route::post('/riwayat-pesanan/detail/{id}/pay', [BookingController::class, 'payBooking'])->name('customer.history.pay');
+    Route::post('/riwayat-pesanan/detail/{id}/snap-token', [BookingController::class, 'getSnapToken'])->name('customer.history.snap-token');
     Route::get('/riwayat-pesanan/ulasan/{id}', [BookingController::class, 'reviewForm'])->name('customer.review');
     Route::post('/riwayat-pesanan/ulasan/{id}', [BookingController::class, 'storeReview'])->name('customer.review.store');
+
+    Route::get('/riwayat-pesanan/reschedule/{id}', [BookingController::class, 'rescheduleForm'])->name('customer.booking.reschedule');
+    Route::post('/riwayat-pesanan/reschedule/{id}', [BookingController::class, 'processReschedule'])->name('customer.booking.reschedule.process');
+    Route::post('/riwayat-pesanan/reschedule-check/{id}', [BookingController::class, 'checkRescheduleFee'])->name('customer.booking.reschedule.check');
 
     Route::get('/profile', [AuthController::class, 'profile'])->name('customer.profile');
     Route::post('/profile', [AuthController::class, 'profileUpdate']);
     
     Route::get('/membership', [AuthController::class, 'membership'])->name('customer.membership');
 });
+
+// Midtrans Notification Webhook Callback Route (Public)
+Route::post('/api/midtrans/callback', [BookingController::class, 'midtransCallback']);
 
 // 5. Admin-only Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -92,6 +101,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Patient Membership Toggle
     Route::post('/patients/{id}/toggle-membership', [AdminController::class, 'toggleMembership'])->name('patients.toggle_membership');
 
+    // System Settings (Admin Fee & PPN)
+    Route::get('/settings/system', [AdminController::class, 'systemSettings'])->name('settings.system');
+    Route::post('/settings/system', [AdminController::class, 'systemSettingsUpdate']);
+
     // Dedicated Membership Settings Page & CRUD
     Route::get('/membership', [AdminController::class, 'membershipIndex'])->name('membership');
     Route::get('/membership/create', [AdminController::class, 'membershipCreate'])->name('membership.create');
@@ -109,6 +122,8 @@ Route::middleware(['auth', 'therapist'])->prefix('terapis')->name('therapist.')-
 
     Route::get('/pendapatan', [TherapistController::class, 'income'])->name('income');
     Route::get('/review', [TherapistController::class, 'reviews'])->name('reviews');
+    Route::get('/profile', [TherapistController::class, 'profile'])->name('profile');
+    Route::post('/profile', [TherapistController::class, 'profileUpdate']);
     Route::post('/bookings/{id}/start-journey', [TherapistController::class, 'startJourney'])->name('start_journey');
     Route::post('/bookings/{id}/arrive', [TherapistController::class, 'arrive'])->name('arrive');
     Route::post('/bookings/{id}/complete', [TherapistController::class, 'completeBooking'])->name('complete');

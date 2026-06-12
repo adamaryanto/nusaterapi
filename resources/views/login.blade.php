@@ -9,6 +9,8 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#f0f7f4] min-h-screen flex items-center justify-center p-4">
 
@@ -19,13 +21,6 @@
             <h1 class="text-2xl font-bold text-slate-900 mb-2">Masuk ke Akun Anda</h1>
             <p class="text-sm text-gray-500">Silakan masukkan email dan password Anda.</p>
         </div>
-
-        @if(session('success'))
-            <div class="mb-5 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center space-x-2">
-                <span>✓</span>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
 
         <form action="{{ route('login') }}" method="POST" class="space-y-5">
             @csrf
@@ -84,5 +79,35 @@
             }
         }
     </script>
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonColor: '#0f172a'
+            });
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonColor: '#0f172a'
+            });
+        </script>
+    @endif
+    @if($errors->any())
+        <script>
+            Swal.fire({
+                title: 'Gagal!',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+                icon: 'error',
+                confirmButtonColor: '#0f172a'
+            });
+        </script>
+    @endif
 </body>
 </html>

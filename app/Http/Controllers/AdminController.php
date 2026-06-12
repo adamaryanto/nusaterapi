@@ -377,6 +377,8 @@ class AdminController extends Controller
             'limit_we' => 'nullable|integer|min:0',
             'window' => 'required|integer|min:1',
             'duration' => 'required|integer|min:1',
+            'free_reschedule_limit' => 'required|integer|min:0',
+            'reschedule_fee' => 'required|integer|min:0',
             'status' => 'required|string|in:active,inactive',
         ]);
 
@@ -398,6 +400,8 @@ class AdminController extends Controller
             'limit_we' => 'nullable|integer|min:0',
             'window' => 'required|integer|min:1',
             'duration' => 'required|integer|min:1',
+            'free_reschedule_limit' => 'required|integer|min:0',
+            'reschedule_fee' => 'required|integer|min:0',
             'status' => 'required|string|in:active,inactive',
         ]);
 
@@ -427,5 +431,26 @@ class AdminController extends Controller
         $user->save();
 
         return redirect()->route('admin.membership')->with('success', 'Tingkat membership pasien berhasil diperbarui.');
+    }
+
+    public function systemSettings()
+    {
+        $adminFee = \App\Models\WebSetting::get('admin_fee', '5000');
+        $ppnPercentage = \App\Models\WebSetting::get('ppn_percentage', '11');
+
+        return view('admin.system_settings', compact('adminFee', 'ppnPercentage'));
+    }
+
+    public function systemSettingsUpdate(Request $request)
+    {
+        $request->validate([
+            'admin_fee' => 'required|integer|min:0',
+            'ppn_percentage' => 'required|numeric|min:0|max:100',
+        ]);
+
+        \App\Models\WebSetting::set('admin_fee', $request->admin_fee);
+        \App\Models\WebSetting::set('ppn_percentage', $request->ppn_percentage);
+
+        return redirect()->route('admin.settings.system')->with('success', 'Pengaturan sistem berhasil diperbarui.');
     }
 }

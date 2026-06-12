@@ -173,7 +173,12 @@
             if (file) {
                 // Limit to 2MB
                 if (file.size > 2 * 1024 * 1024) {
-                    alert("Ukuran file terlalu besar! Maksimal ukuran adalah 2MB.");
+                    Swal.fire({
+                        title: 'Ukuran File Besar',
+                        text: 'Ukuran file terlalu besar! Maksimal ukuran adalah 2MB.',
+                        icon: 'warning',
+                        confirmButtonColor: '#0f172a'
+                    });
                     return;
                 }
                 

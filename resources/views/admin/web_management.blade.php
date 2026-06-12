@@ -6,23 +6,7 @@
 @section('content')
 <div class="space-y-6 max-w-5xl mx-auto">
 
-    {{-- Flash Message --}}
-    @if(session('success'))
-        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl px-5 py-3 text-sm font-medium flex items-center gap-2">
-            <span>✅</span> {{ session('success') }}
-        </div>
-    @endif
 
-    @if($errors->any())
-        <div class="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl px-5 py-3 text-sm font-medium flex flex-col gap-2 shadow-sm">
-            <span class="font-bold flex items-center gap-1.5">⚠️ Terjadi Kesalahan Pengisian Data:</span>
-            <ul class="list-disc pl-5 space-y-0.5 text-xs text-rose-700 font-normal">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     {{-- ===================================== --}}
     {{-- 1. BANNER UTAMA --}}

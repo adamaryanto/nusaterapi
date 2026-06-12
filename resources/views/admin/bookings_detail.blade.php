@@ -131,6 +131,14 @@
                             <span class="w-2/3">-Rp {{ number_format($booking->discount_amount, 0, ',', '.') }}</span>
                         </div>
                         @endif
+                        <div class="flex text-slate-600 font-medium">
+                            <span class="w-1/3 text-gray-400 font-medium">Biaya Admin</span>
+                            <span class="w-2/3 text-slate-800 font-semibold">Rp {{ number_format($booking->admin_fee, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex text-slate-600 font-medium">
+                            <span class="w-1/3 text-gray-400 font-medium">PPN</span>
+                            <span class="w-2/3 text-slate-800 font-semibold">Rp {{ number_format($booking->tax_amount, 0, ',', '.') }}</span>
+                        </div>
                     </div>
                 </div>
 

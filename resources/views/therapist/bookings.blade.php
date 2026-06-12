@@ -84,7 +84,7 @@
                         @if($booking->status === 'Akan Datang')
                             @if($booking->location_type === 'home')
                                 <form action="{{ route('therapist.start_journey', $booking->id) }}" method="POST"
-                                      onsubmit="return confirm('Mulai perjalanan menuju lokasi customer?')">
+                                      onsubmit="return confirmAction(event, 'Mulai Perjalanan?', 'Mulai perjalanan menuju lokasi customer?', 'Ya, Mulai!')">
                                     @csrf
                                     <button type="submit"
                                             class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">
@@ -93,7 +93,7 @@
                                 </form>
                             @else
                                 <form action="{{ route('therapist.complete', $booking->id) }}" method="POST"
-                                      onsubmit="return confirm('Tandai booking ini sebagai Selesai?')">
+                                      onsubmit="return confirmAction(event, 'Selesaikan Booking?', 'Tandai booking ini sebagai Selesai?', 'Ya, Selesaikan!')">
                                     @csrf
                                     <button type="submit"
                                             class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">
@@ -103,7 +103,7 @@
                             @endif
                         @elseif($booking->status === 'Dalam Perjalanan')
                             <form action="{{ route('therapist.arrive', $booking->id) }}" method="POST"
-                                  onsubmit="return confirm('Konfirmasi bahwa Anda sudah sampai di lokasi?')">
+                                  onsubmit="return confirmAction(event, 'Sudah Sampai?', 'Konfirmasi bahwa Anda sudah sampai di lokasi?', 'Ya, Sudah Sampai!')">
                                 @csrf
                                 <button type="submit"
                                         class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">
@@ -112,7 +112,7 @@
                             </form>
                         @elseif($booking->status === 'Sampai Tujuan')
                             <form action="{{ route('therapist.complete', $booking->id) }}" method="POST"
-                                  onsubmit="return confirm('Tandai booking ini sebagai Selesai?')">
+                                  onsubmit="return confirmAction(event, 'Selesaikan Booking?', 'Tandai booking ini sebagai Selesai?', 'Ya, Selesaikan!')">
                                 @csrf
                                 <button type="submit"
                                         class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">
@@ -146,6 +146,26 @@
             dateContainer.classList.add('hidden');
             document.getElementById('filter-form').submit();
         }
+    }
+
+    function confirmAction(event, title, text, confirmButtonText = 'Ya, Lanjutkan') {
+        event.preventDefault();
+        const form = event.target;
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#4b5563',
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
     }
 </script>
 @endsection

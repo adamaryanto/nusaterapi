@@ -14,15 +14,7 @@
             <h3 class="font-extrabold text-slate-900 text-lg">Add New Membership Tier</h3>
         </div>
 
-        @if($errors->any())
-            <div class="bg-rose-50 border border-rose-250 text-rose-800 px-4 py-3 rounded-lg text-sm font-medium shadow-sm">
-                <ul class="list-disc list-inside">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+
 
         <!-- Form Card -->
         <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden p-6 md:p-8">
@@ -94,6 +86,27 @@
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Duration (Days)</label>
                         <input type="number" name="duration" required min="1" value="{{ old('duration', 30) }}" placeholder="e.g. 30" 
                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition bg-gray-50/30">
+                    </div>
+
+                    <!-- Separator for Reschedule Section -->
+                    <div class="md:col-span-2 pt-2">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-gray-100 pb-2">Reschedule Settings</p>
+                    </div>
+
+                    <!-- Free Reschedule Limit -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Free Reschedule Limit</label>
+                        <input type="number" name="free_reschedule_limit" required min="0" value="{{ old('free_reschedule_limit', 3) }}" placeholder="e.g. 3" 
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition bg-gray-50/30">
+                        <p class="text-[10px] text-gray-400 mt-1">Jumlah reschedule mendadak gratis per bulan (shared semua booking)</p>
+                    </div>
+
+                    <!-- Reschedule Fee -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Reschedule Fee (Rp)</label>
+                        <input type="number" name="reschedule_fee" required min="0" value="{{ old('reschedule_fee', 15000) }}" placeholder="e.g. 15000" 
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition bg-gray-50/30">
+                        <p class="text-[10px] text-gray-400 mt-1">Biaya reschedule mendadak setelah limit terpakai</p>
                     </div>
                 </div>
 

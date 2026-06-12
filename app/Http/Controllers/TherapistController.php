@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Therapist;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class TherapistController extends Controller
@@ -260,5 +262,56 @@ class TherapistController extends Controller
 
         $booking->update(['status' => 'Dibatalkan']);
         return redirect()->route('therapist.bookings')->with('success', 'Booking berhasil ditolak.');
+    }
+
+    public function profile()
+    {
+        $therapist = Auth::user();
+        return view('therapist.profile', compact('therapist'));
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        $therapist = User::find(Auth::id());
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $therapist->id,
+            'phone' => 'required|string|max:20',
+            'gender' => 'nullable|string|in:Laki-laki,Perempuan',
+            'birth_date' => 'nullable|date',
+            'address' => 'nullable|string',
+            'password' => 'nullable|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $avatarPath = $therapist->avatar_path;
+        if ($request->hasFile('avatar')) {
+            if ($avatarPath && file_exists(public_path($avatarPath))) {
+                @unlink(public_path($avatarPath));
+            }
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/avatars'), $filename);
+            $avatarPath = 'uploads/avatars/' . $filename;
+        }
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
+            'address' => $request->address,
+            'avatar_path' => $avatarPath,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $therapist->update($data);
+
+        return redirect()->route('therapist.profile')->with('success', 'Profil berhasil diperbarui.');
     }
 }
